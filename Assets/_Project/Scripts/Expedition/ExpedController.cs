@@ -6,14 +6,15 @@ using UnityEngine.InputSystem;
 public class ExpedController : MonoBehaviour
 {
     [Header("Expedition Object")]
-    [SerializeField] private GridManager gridManager;
-    [SerializeField] private ExpedPlayer player;
-    [SerializeField] private Camera cam;
+    [SerializeField] private GridManager    gridManager;
+    [SerializeField] private ExpedPlayer    player;
+    [SerializeField] private Camera         cam;
 
     [Header("Raycast")]
     [SerializeField] private LayerMask tileMask;
 
     private Tile selectedTile;
+    private Tile hoveredTile;
     private bool isMoving = false;
 
     private void Awake()
@@ -46,14 +47,55 @@ public class ExpedController : MonoBehaviour
     {
         if (isMoving) return;
 
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            ClearHover();
+            return;
+        }
+
+        UpdateHover();
 
         if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (TryRaycastTile(out Tile hitTile))
+            if(hoveredTile != null)
             {
-                OnClickedTile(hitTile);
+                OnClickedTile(hoveredTile);
             }
+        }
+    }
+
+    void ClearHover()
+    {
+        SetHover(hoveredTile, false);
+        hoveredTile = null;
+    }
+
+    void SetHover(Tile tile, bool isHover)
+    {
+        if (tile != null)
+        {
+            if (tile == selectedTile)
+            {
+                return;
+            }
+            tile.SetHighlight(isHover);
+        }
+    }
+
+    void UpdateHover()
+    {
+        if (TryRaycastTile(out Tile hitTile))
+        {
+            if (hitTile != hoveredTile)
+            {
+                SetHover(hoveredTile, false);
+                hoveredTile = hitTile;
+                SetHover(hoveredTile, true);
+            }
+        }
+        else
+        {
+            ClearHover();
         }
     }
     bool TryRaycastTile(out Tile hitTile)
@@ -78,7 +120,7 @@ public class ExpedController : MonoBehaviour
         }
         else
         {
-            Debug.Log("[ExpedController] Raycast did not hit any tile.");
+            //Debug.Log("[ExpedController] Raycast did not hit any tile.");
             return false;
         }
         return true;
@@ -136,6 +178,36 @@ public class ExpedController : MonoBehaviour
                 + GameManager.gameManager.state.expeditionTurn);
         }
 
+        HandleEnterTile(dest);
+
         isMoving = false;
+    }
+
+    void HandleEnterTile(Tile tile)
+    {
+        if (tile == null) return;
+        if (GameManager.gameManager == null || GameManager.gameManager.state == null) return;
+
+        var state = GameManager.gameManager.state;
+
+        switch(tile.tileContent)
+        {
+            case TileContentType.Farming:
+                state.farmingCount++;
+                Debug.Log($"[Farming] ({tile.Coord.x},{tile.Coord.y})  farmingCount={state.farmingCount}");
+                tile.SetTileContent(TileContentType.None);
+                break;
+
+            case TileContentType.NPC:
+                state.talkCount++;
+                Debug.Log($"[Talk] ({tile.Coord.x},{tile.Coord.y})  talkCount={state.talkCount}");
+                break;
+
+            case TileContentType.Goal:
+                Debug.Log($"[Goal] ({tile.Coord.x},{tile.Coord.y})  Expedition Completed in {state.expeditionTurn} turns!");
+                state.day++;
+                GameManager.gameManager.LoadScene("Hub");
+                break;
+        }
     }
 }

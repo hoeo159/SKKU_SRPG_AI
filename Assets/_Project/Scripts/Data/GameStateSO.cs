@@ -12,7 +12,8 @@ public class GameStateSO : ScriptableObject
     public int expeditionMoveCount  = 0;
     public int optionalKillCount    = 0;
     public int avoidCount           = 0;
-    public int harvestCount         = 0;
+    public int farmingCount         = 0;
+    public int talkCount            = 0;
 
     public void ClearExpeditionState()
     {
@@ -21,6 +22,7 @@ public class GameStateSO : ScriptableObject
 
         optionalKillCount   = 0;
         avoidCount          = 0;
-        harvestCount        = 0;
+        farmingCount        = 0;
+        talkCount           = 0;
     }
 }
