@@ -9,10 +9,4 @@ public class BootLoader : MonoBehaviour
     {
         GameManager.gameManager.LoadScene(initSceneName);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

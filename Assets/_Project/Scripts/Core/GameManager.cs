@@ -18,12 +18,12 @@ public class GameManager : MonoBehaviour
         gameManager = this;
         DontDestroyOnLoad(gameObject);
 
-        ResetRun();
+        ResetGameStateSO();
     }
 
-    public void ResetRun()
+    public void ResetGameStateSO()
     {
-        if(gameStateSO == null)
+        if(gameStateSO == null) 
         {
             Debug.LogError("[GameManager] GameState not connected");
             return;

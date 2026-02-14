@@ -9,7 +9,7 @@ public class HubUI : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("HubUI Start");
+        Debug.Log("[HubUI Start]HubUI Start");
         Refresh();
     }
 
@@ -28,7 +28,7 @@ public class HubUI : MonoBehaviour
 
     public void OnClick_ResetRun()
     {
-        GameManager.gameManager.ResetRun();
+        GameManager.gameManager.ResetGameStateSO();
         Refresh();
     }
 }
