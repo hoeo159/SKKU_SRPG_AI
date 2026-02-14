@@ -3,15 +3,15 @@ using UnityEngine;
 public class GridManager : MonoBehaviour
 {
     [Header("Grid Settings")]
-    [SerializeField] private int width = 12;
-    [SerializeField] private int height = 12;
-    [SerializeField] private float tileSize = 1.0f;
-    [SerializeField] private Material Mat1;
-    [SerializeField] private Material Mat2;
+    [SerializeField] private int        width       = 12;
+    [SerializeField] private int        height      = 12;
+    [SerializeField] public  float      tileSize    = 1.0f;
+    [SerializeField] private Material   Mat1;
+    [SerializeField] private Material   Mat2;
 
     [Header("Prefabs and Parents")]
-    [SerializeField] private Tile tilePrefab;
-    [SerializeField] private Transform tileParent;
+    [SerializeField] private Tile       tilePrefab;
+    [SerializeField] private Transform  tileParent;
 
     private Tile[,] tiles;
 

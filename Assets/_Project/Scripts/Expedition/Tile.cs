@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [field : SerializeField] private Vector2Int Coord { get; set; }
-    [SerializeField] private GameObject highlight;
+    [field: SerializeField]     public  Vector2Int Coord { get; private set; }
+    [SerializeField]            private GameObject highlight;
 
     public bool Walkable { get; set; } = true;
     public bool Occupied { get; set; } = false;
