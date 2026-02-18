@@ -19,7 +19,7 @@ public class ExpedController : MonoBehaviour
 
     private void Awake()
     {
-        if (cam == null) cam = Camera.main;
+        if (cam == null)    cam = Camera.main;
         if (player == null) player = FindFirstObjectByType<ExpedPlayer>();
     }
 
@@ -39,6 +39,12 @@ public class ExpedController : MonoBehaviour
         else
         {
             Debug.LogError("[ExpedController] Start tile not found at coordinate: " + startCoord);
+        }
+
+        var state = GameManager.gameManager?.state;
+        if(state != null)
+        {
+            state.BeginExped(startCoord);
         }
     }
 
@@ -188,7 +194,7 @@ public class ExpedController : MonoBehaviour
         if (tile == null) return;
         if (GameManager.gameManager == null || GameManager.gameManager.state == null) return;
 
-        var state = GameManager.gameManager.state;
+        var state = GameManager.gameManager?.state;
 
         switch(tile.tileContent)
         {
@@ -206,6 +212,7 @@ public class ExpedController : MonoBehaviour
             case TileContentType.Goal:
                 Debug.Log($"[Goal] ({tile.Coord.x},{tile.Coord.y})  Expedition Completed in {state.expeditionTurn} turns!");
                 state.day++;
+                state.EndExped(tile.Coord, ExpedEndType.GoalReached);
                 GameManager.gameManager.LoadScene("Hub");
                 break;
         }

@@ -9,7 +9,6 @@ public class HubUI : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("[HubUI Start]HubUI Start");
         Refresh();
     }
 
@@ -18,11 +17,13 @@ public class HubUI : MonoBehaviour
         var state = GameManager.gameManager.state;
         dayText.text = $"Day {state.day}";
         goldText.text = $"Gold : {state.gold}";
+
+        Debug.Log(GameManager.gameManager.state.lastExpedReport);
     }
 
     public void OnClick_GoToExpedition()
     {
-        GameManager.gameManager.state.ClearExpeditionState();
+        //GameManager.gameManager.state.ClearExpeditionState();
         GameManager.gameManager.LoadScene("Expedition");
     }
 
