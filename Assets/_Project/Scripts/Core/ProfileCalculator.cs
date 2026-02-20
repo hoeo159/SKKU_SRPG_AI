@@ -39,8 +39,10 @@ public class ProfileCalculator
         int dMercy      = Mathf.Clamp(s.avoidCount * 1 + s.talkCount * 1 - s.optionalKillCount * 1, -10, 10);
         int dGreedy     = Mathf.Clamp(s.farmingCount * 1 - s.turn / 10, -10, 10);
         int dCurious    = Mathf.Clamp(s.extraMove * 1 + s.talkCount * 1 + s.farmingCount * 1, -10, 10);
+
         int dDiscipline = Mathf.Clamp(-s.extraMove * 1, -10, 10);
-        if(s.endType != ExpedEndType.GoalReached || s.endType != ExpedEndType.NormalReturn) dDiscipline -= 5;
+        if(s.endType == ExpedEndType.Abort) dDiscipline -= 5;
+        dDiscipline = Mathf.Clamp(dDiscipline, -10, 10);
 
         int dRisk       = Mathf.Clamp(s.optionalKillCount * 1 - s.avoidCount * 1, -10, 10);
         int dSocial     = Mathf.Clamp(s.talkCount * 1, -10, 10);

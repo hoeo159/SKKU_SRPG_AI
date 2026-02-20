@@ -13,7 +13,7 @@ public class GameStateSO : ScriptableObject
         public Vector2Int startCoord;
         public Vector2Int endCoord;
 
-        public float durationSeconds;
+        public float durationSecond;
 
         public int turn;
         public int moveCount;
@@ -93,7 +93,7 @@ public class GameStateSO : ScriptableObject
 
             startCoord      = curExpedStartCoord,
             endCoord        = EndCoord,
-            durationSeconds = duration,
+            durationSecond = duration,
             turn            = expeditionTurn,
 
             moveCount       = expeditionMoveCount,
@@ -107,7 +107,7 @@ public class GameStateSO : ScriptableObject
 
         lastExpedReport =   $"[Expedition #{lastExpedSnapShot.expedId}] {lastExpedSnapShot.endType}\n" +
                             $"Start: {lastExpedSnapShot.startCoord}  End: {lastExpedSnapShot.endCoord}\n" +
-                            $"Duration: {lastExpedSnapShot.durationSeconds:F1}s\n" +
+                            $"Duration: {lastExpedSnapShot.durationSecond:F1}s\n" +
                             $"Turns: {lastExpedSnapShot.turn}, Moves: {lastExpedSnapShot.moveCount}\n" +
                             $"Farming: {lastExpedSnapShot.farmingCount}, Talk: {lastExpedSnapShot.talkCount}\n" +
                             $"OptionalKills: {lastExpedSnapShot.optionalKillCount}, Avoids: {lastExpedSnapShot.avoidCount}\n";

@@ -35,7 +35,6 @@ public struct BehaviorSummary
             endType             = snap.endType,
             startCoord          = snap.startCoord,
             endCoord            = snap.endCoord,
-            durationSecond      = snap.durationSeconds,
             turn                = snap.turn,
             moveCount           = snap.moveCount,
             farmingCount        = snap.farmingCount,

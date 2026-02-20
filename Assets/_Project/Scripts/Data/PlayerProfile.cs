@@ -4,14 +4,15 @@ using System;
 [Serializable]
 public struct PlayerProfile
 {
-    [Range(0, 100)] public int mercy;
-    [Range(0, 100)] public int greedy;
-    [Range(0, 100)] public int curious;
-    [Range(0, 100)] public int discipline;
-    [Range(0, 100)] public int risk;
-    [Range(0, 100)] public int social;
-    [Range(0, 100)] public int cruel;
-    [Range(0, 100)] public int caution;
+    // [Range(0, 100)] except for delta profile can be negative
+    public int mercy;
+    public int greedy;
+    public int curious;
+    public int discipline;
+    public int risk;
+    public int social;
+    public int cruel;
+    public int caution;
 
     public static PlayerProfile Init()
     {
