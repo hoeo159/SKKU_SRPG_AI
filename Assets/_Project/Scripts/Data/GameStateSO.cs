@@ -29,6 +29,17 @@ public class GameStateSO : ScriptableObject
     public int day  = 1;
     public int gold = 0;
 
+    [Header("Wrold Parameters")]
+    [Range(0, 100)] public int guardAlert = 0;
+    [Range(0, 100)] public int merchantAlert = 50;
+    [Range(0, 100)] public int enemyAgressive = 50;
+
+    [Header("Holding Events")]
+    public int lastEventGeneratedExpedId = 0;
+    public EventCardSO holdingEvent;
+    [TextArea(3, 10)]
+    public string holdingEventDebug;
+
     [Header("Expedition State (temp log)")]
     public int expeditionTurn       = 0;
     public int expeditionMoveCount  = 0;

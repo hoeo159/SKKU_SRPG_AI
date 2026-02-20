@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a306901e883c64cbcc98030e25fe79, type: 3}
+  m_Name: EventCardTemplate
+  m_EditorClassIdentifier: Assembly-CSharp::EventCardSO
+  id: 
+  title: 
+  description: 
+  baseWeight: 10
+  wMercy: 0
+  wGreedy: 0
+  wCurious: 0
+  wDiscipline: 0
+  wRisk: 0
+  wSocial: 0
+  wCruel: 0
+  wCaution: 0
+  option:
+    optionText: 
+    optionValue: 
+    effects: []

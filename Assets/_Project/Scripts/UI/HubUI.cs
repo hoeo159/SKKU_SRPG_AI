@@ -5,6 +5,8 @@ public class HubUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text dayText;
     [SerializeField] private TMP_Text goldText;
+    [SerializeField] private TMP_Text expedReportText;
+    [SerializeField] private TMP_Text profileReprotText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,6 +19,8 @@ public class HubUI : MonoBehaviour
         var state = GameManager.gameManager.state;
         dayText.text = $"Day {state.day}";
         goldText.text = $"Gold : {state.gold}";
+        expedReportText.text = GameManager.gameManager.state?.lastExpedReport;
+        profileReprotText.text = GameManager.gameManager.state?.lastProfileReport;
 
         Debug.Log(GameManager.gameManager.state.lastExpedReport);
     }
