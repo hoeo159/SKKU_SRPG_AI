@@ -6,7 +6,7 @@ public enum  EventEffectType
 {
     AddGold,
     AddGuardAlert,
-    AddMerchantAlert,
+    AddMerchantTrust,
     AddEnemyAgressive
 }
 
@@ -49,5 +49,6 @@ public class EventCardSO : ScriptableObject
     public float wCaution    = 0.0f;
 
     [Header("Options")]
-    public EventOption option;
+    public EventOption optionA;
+    public EventOption optionB;
 }

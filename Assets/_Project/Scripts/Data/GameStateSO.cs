@@ -1,10 +1,10 @@
 using UnityEngine;
-using System.Collections.Generic;
+using System;
 
 [CreateAssetMenu(fileName = "GameStateTemplate", menuName = "Scriptable Objects/GameState")]
 public class GameStateSO : ScriptableObject
 {
-    [System.Serializable]
+    [Serializable]
     public struct ExpedSnapShot
     {
         public int expedId;
@@ -31,7 +31,7 @@ public class GameStateSO : ScriptableObject
 
     [Header("Wrold Parameters")]
     [Range(0, 100)] public int guardAlert = 0;
-    [Range(0, 100)] public int merchantAlert = 50;
+    [Range(0, 100)] public int merchantTrust = 50;
     [Range(0, 100)] public int enemyAgressive = 50;
 
     [Header("Holding Events")]

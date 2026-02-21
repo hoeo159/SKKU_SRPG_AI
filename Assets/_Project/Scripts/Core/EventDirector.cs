@@ -2,19 +2,19 @@ using NUnit.Framework.Internal;
 using System.Text;
 using UnityEngine;
 
-public class EventDirector
+public static class EventDirector
 {
     private static float normalize(int value)
     {
         return (value - 50) / 50.0f;
     }
 
-    public static (EventCardSO, string) SelectEvent(GameStateSO state, EventCardSO[] eventPool)
+    public static (EventCardSO eventCard, string debug) SelectEvent(GameStateSO state, EventCardSO[] eventPool)
     {
         if(state == null || eventPool == null || eventPool.Length == 0)
         {
             Debug.LogError("[EventDirector] SelectEvent init get null");
-            return;
+            return (null, null);
         }
 
         var profile = state.playerProfile;
