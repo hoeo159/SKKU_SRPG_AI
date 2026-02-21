@@ -22,7 +22,8 @@ public class HubUI : MonoBehaviour
         expedReportText.text = GameManager.gameManager.state?.lastExpedReport;
         profileReprotText.text = GameManager.gameManager.state?.lastProfileReport;
 
-        Debug.Log(GameManager.gameManager.state.lastExpedReport);
+        Debug.Log($"holdingEvent={(state.holdingEvent != null ? state.holdingEvent.id : "null")}, " +
+            $"lastEventGeneratedExpedId={state.lastEventGeneratedExpedId}, lastExpedId={state.lastExpedSnapShot.expedId}");
     }
 
     public void OnClick_GoToExpedition()

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a306901e883c64cbcc98030e25fe79, type: 3}
+  m_Name: "\uC18C\uBB38"
+  m_EditorClassIdentifier: Assembly-CSharp::EventCardSO
+  id: rumor
+  title: "\uC18C\uBB38"
+  description: "\uC18C \uBB38\uB0B4\uBB38\uB0B4\uBB38\uB0B4\uBB38\uB0B4 \uC18C"
+  baseWeight: 10
+  wMercy: 0
+  wGreedy: 0
+  wCurious: 0
+  wDiscipline: 0
+  wRisk: 0
+  wSocial: 0
+  wCruel: 12
+  wCaution: -6
+  optionA:
+    optionText: "\uC870\uC6A9\uD788 \uC9C0\uB098\uAC04\uB2E4"
+    optionValue: "\uD558\uB0A8\uC790\uC758 \uD45C\uBCF8"
+    effects:
+    - type: 1
+      value: -10
+    - type: 0
+      value: 5
+  optionB:
+    optionText: "\uD574\uBA85\uD55C\uB2E4"
+    optionValue: "\uC0AC\uB78C\uB4E4\uC5D0\uAC8C \uCF5C\uD31D\uC744 \uC3DC\uB2E4"
+    effects:
+    - type: 3
+      value: 10
+    - type: 0
+      value: -5

@@ -8,8 +8,11 @@ public class HubDirectorRunner : MonoBehaviour
     void Start()
     {
         var state = GameManager.gameManager?.state;
-        if (state != null) return;
+
+        if (state == null) return;
         if (state.lastExpedSnapShot.expedId <= 0) return;
+
+        if (state.lastEventGeneratedExpedId >= state.lastExpedSnapShot.expedId) return;
 
         var eventCard = EventDirector.SelectEvent(state, eventPool);
 

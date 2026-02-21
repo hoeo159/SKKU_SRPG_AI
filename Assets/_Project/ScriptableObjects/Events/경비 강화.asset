@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a306901e883c64cbcc98030e25fe79, type: 3}
+  m_Name: "\uACBD\uBE44 \uAC15\uD654"
+  m_EditorClassIdentifier: Assembly-CSharp::EventCardSO
+  id: patrol
+  title: "\uACBD\uBE44 \uAC15\uD654"
+  description: "\uACBD\uBE44 \uAC15\uD654"
+  baseWeight: 10
+  wMercy: 0
+  wGreedy: 8
+  wCurious: -6
+  wDiscipline: 0
+  wRisk: 0
+  wSocial: 0
+  wCruel: 0
+  wCaution: 0
+  optionA:
+    optionText: "\uB1CC\uBB3C"
+    optionValue: "10\uB9CC\uC6D0 \uC9C0\uD3D0\uC758 \uD544\uC694\uC131"
+    effects:
+    - type: 1
+      value: 10
+    - type: 0
+      value: -10
+  optionB:
+    optionText: "\uADFC\uCDE8"
+    optionValue: Zzz
+    effects:
+    - type: 1
+      value: -5
+    - type: 3
+      value: 5

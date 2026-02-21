@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a306901e883c64cbcc98030e25fe79, type: 3}
+  m_Name: "\uBC00\uAC00\uB8E8 \uB2F4\uD569"
+  m_EditorClassIdentifier: Assembly-CSharp::EventCardSO
+  id: merchant
+  title: "\uBC00\uAC00\uB8E8 \uB2F4\uD569"
+  description: "7\uAC1C\uC758 \uAE30\uC5C5\uC774 \uC18C\uAE08\uBE75\uC744 \uB9DB\uC788\uAC8C
+    \uBA39\uC74C"
+  baseWeight: 10
+  wMercy: 0
+  wGreedy: -6
+  wCurious: 0
+  wDiscipline: 0
+  wRisk: 0
+  wSocial: 10
+  wCruel: 0
+  wCaution: 0
+  optionA:
+    optionText: "\uC815\uC911\uD788 \uD611\uC0C1"
+    optionValue: "\uC81C\uBC1C \uD4E8\u3160"
+    effects:
+    - type: 2
+      value: 10
+  optionB:
+    optionText: "990\uC6D0 \uC18C\uAE08\uBE75"
+    optionValue: "\uD5C9"
+    effects:
+    - type: 0
+      value: 0
+    - type: 2
+      value: -5
