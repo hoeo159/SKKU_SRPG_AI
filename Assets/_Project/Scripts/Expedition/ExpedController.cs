@@ -13,6 +13,10 @@ public class ExpedController : MonoBehaviour
     [Header("Raycast")]
     [SerializeField] private LayerMask tileMask;
 
+    [Header("Test")]
+    private bool waitingRaiderDecision = false;
+    private Tile pendingRaiderTile = null;
+
     private Tile selectedTile;
     private Tile hoveredTile;
     private bool isMoving = false;
@@ -53,6 +57,19 @@ public class ExpedController : MonoBehaviour
     {
         if (isMoving) return;
 
+        if (waitingRaiderDecision)
+        {
+            if (Keyboard.current != null && Keyboard.current.aKey.isPressed)
+            {
+                ResolveRaider(true);
+            }
+            else if (Keyboard.current != null && Keyboard.current.fKey.isPressed)
+            {
+                ResolveRaider(false);
+            }
+            return; // 결정 전엔 이동/클릭 입력 막기
+        }
+
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             ClearHover();
@@ -68,6 +85,20 @@ public class ExpedController : MonoBehaviour
                 OnClickedTile(hoveredTile);
             }
         }
+    }
+
+    private void ResolveRaider(bool isAvoid)
+    {
+        var state = GameManager.gameManager?.state;
+        if (state == null || pendingRaiderTile == null) return;
+
+        if (isAvoid) state.avoidCount++;
+        else state.optionalKillCount++;
+
+        pendingRaiderTile.SetTileContent(TileContentType.None);
+
+        pendingRaiderTile = null;
+        waitingRaiderDecision = false;
     }
 
     void ClearHover()
@@ -214,6 +245,12 @@ public class ExpedController : MonoBehaviour
                 state.day++;
                 state.EndExped(tile.Coord, ExpedEndType.GoalReached);
                 GameManager.gameManager.LoadScene("Hub");
+                break;
+
+            case TileContentType.Raider:
+                waitingRaiderDecision = true;
+                pendingRaiderTile = tile;
+                Debug.Log("[Raider] A=Avoid / F=Fight");
                 break;
         }
     }

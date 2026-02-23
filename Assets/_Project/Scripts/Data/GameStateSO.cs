@@ -30,9 +30,11 @@ public class GameStateSO : ScriptableObject
     public int gold = 0;
 
     [Header("Wrold Parameters")]
-    [Range(0, 100)] public int guardAlert = 0;
-    [Range(0, 100)] public int merchantTrust = 50;
-    [Range(0, 100)] public int enemyAgressive = 50;
+    [Range(0, 100)] public int guardAlert       = 50;
+    [Range(0, 100)] public int merchantTrust    = 50;
+    [Range(0, 100)] public int enemyAgressive   = 50;
+    [Range(0, 100)] public int shelterComfort   = 50;
+    [Range(0, 100)] public int radiation        = 0;
 
     [Header("Holding Events")]
     public int lastEventGeneratedExpedId = 0;
@@ -47,6 +49,12 @@ public class GameStateSO : ScriptableObject
     public int avoidCount           = 0;
     public int farmingCount         = 0;
     public int talkCount            = 0;
+
+    [Header("Expedition Opportunity")]
+    public int farmingOpportunityCount = 0;
+    public int talkOpportunityCount = 0;
+    public int raiderOpportunityCount = 0;
+    public int radiationOpportunityCount = 0;
 
     [Header("Expedition Start Session")]
     public int          expedId = 0;
@@ -79,6 +87,11 @@ public class GameStateSO : ScriptableObject
         avoidCount          = 0;
         farmingCount        = 0;
         talkCount           = 0;
+
+        farmingOpportunityCount = 0;
+        talkOpportunityCount = 0;
+        raiderOpportunityCount = 0;
+        radiationOpportunityCount = 0;
     }
 
     public void BeginExped(Vector2Int StartCoord)

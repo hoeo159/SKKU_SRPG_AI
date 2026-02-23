@@ -3,5 +3,7 @@ public enum TileContentType
     None,
     Farming,
     NPC,
-    Goal
+    Goal,
+    Radiaition,
+    Raider
 }

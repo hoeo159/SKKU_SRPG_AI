@@ -26,6 +26,14 @@ public static class EventApplier
                 case EventEffectType.AddEnemyAgressive:
                     state.enemyAgressive = Mathf.Clamp(state.enemyAgressive + effect.value, 0, 100);
                     break;
+
+                case EventEffectType.AddShelterComfort:
+                    state.shelterComfort = Mathf.Clamp(state.shelterComfort + effect.value, 0, 100);
+                    break;
+
+                case EventEffectType.AddRadiation:
+                    state.radiation = Mathf.Clamp(state.radiation + effect.value, 0, 100);
+                    break;
             }
         }
     }

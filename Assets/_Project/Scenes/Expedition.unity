@@ -1331,9 +1331,15 @@ MonoBehaviour:
   tileMat1: {fileID: 2100000, guid: d32b25b87220c5e46aefe7e3a3bbd66f, type: 2}
   tileMat2: {fileID: 2100000, guid: f701f2df66946654bb51c28074b23c09, type: 2}
   highlightMat: {fileID: 2100000, guid: 2e1e204940959e840a66093dc8090585, type: 2}
+  raiderMat: {fileID: 2100000, guid: 804f7561a05afe746b32af5a43d6edc5, type: 2}
+  radiationMat: {fileID: 2100000, guid: c52e080a1a671244d9c49221cd762a57, type: 2}
+  farmingMat: {fileID: 2100000, guid: 9d7eb0fd90cec4144b7bf3549040b5ee, type: 2}
+  npcMat: {fileID: 2100000, guid: fd12619a6d6608844a5b2bfc979cabf5, type: 2}
+  goalMat: {fileID: 2100000, guid: ddb1f7e8b881aef4c97b821d76affee3, type: 2}
   tilePrefab: {fileID: 4326065216200177563, guid: 859d3a462ad241d449155d06a26792a3, type: 3}
   tileParent: {fileID: 416973777}
   placeDebugContents: 1
+  startCoord: {x: 0, y: 0}
   farmingCoord: {x: 1, y: 0}
   npcCoord: {x: 0, y: 1}
   goalCoord: {x: 5, y: 5}

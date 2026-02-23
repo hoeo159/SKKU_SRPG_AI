@@ -7,6 +7,7 @@ public class HubUI : MonoBehaviour
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private TMP_Text expedReportText;
     [SerializeField] private TMP_Text profileReprotText;
+    [SerializeField] private TMP_Text worldParamText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,6 +22,12 @@ public class HubUI : MonoBehaviour
         goldText.text = $"Gold : {state.gold}";
         expedReportText.text = GameManager.gameManager.state?.lastExpedReport;
         profileReprotText.text = GameManager.gameManager.state?.lastProfileReport;
+        worldParamText.text = $"[World]\n" +
+            $"GuardAlert: {state.guardAlert}\n" +
+            $"MerchantTrust: {state.merchantTrust}\n" +
+            $"EnemyAggressive: {state.enemyAgressive}\n" +
+            $"ShelterComfort: {state.shelterComfort}\n" +
+            $"Radiation: {state.radiation}\n";
 
         Debug.Log($"holdingEvent={(state.holdingEvent != null ? state.holdingEvent.id : "null")}, " +
             $"lastEventGeneratedExpedId={state.lastEventGeneratedExpedId}, lastExpedId={state.lastExpedSnapShot.expedId}");

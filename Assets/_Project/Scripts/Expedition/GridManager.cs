@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,11 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Material   tileMat1;
     [SerializeField] private Material   tileMat2;
     [SerializeField] private Material   highlightMat;
+    [SerializeField] private Material   raiderMat;
+    [SerializeField] private Material   radiationMat;
+    [SerializeField] private Material   farmingMat;
+    [SerializeField] private Material   npcMat;
+    [SerializeField] private Material   goalMat;
 
     [Header("Prefabs and Parents")]
     [SerializeField] private Tile       tilePrefab;
@@ -17,6 +23,7 @@ public class GridManager : MonoBehaviour
 
     [Header("Debug Contents")]
     [SerializeField] private bool placeDebugContents = true;
+    [SerializeField] private Vector2Int startCoord = new Vector2Int(0, 0);
     [SerializeField] private Vector2Int farmingCoord = new Vector2Int(1, 0);
     [SerializeField] private Vector2Int npcCoord = new Vector2Int(0, 1);
     [SerializeField] private Vector2Int goalCoord = new Vector2Int(10, 10);
@@ -35,21 +42,80 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         GenerateTiles();
+        PlaceWorldHazard();
 
         if (placeDebugContents)
         {
-            SetTileContent(farmingCoord, TileContentType.Farming);
-            SetTileContent(npcCoord, TileContentType.NPC);
-            SetTileContent(goalCoord, TileContentType.Goal);
+            SetTileContent(farmingCoord, TileContentType.Farming, farmingMat);
+            SetTileContent(npcCoord, TileContentType.NPC, npcMat);
+            SetTileContent(goalCoord, TileContentType.Goal, goalMat);
         }
     }
-    private void SetTileContent(Vector2Int coord, TileContentType type)
+    private void SetTileContent(Vector2Int coord, TileContentType type, Material mat = null)
     {
         Tile curTile = GetTile(coord);
         if (curTile != null)
             curTile.SetTileContent(type);
+        if(mat != null)
+        {
+            var renderer = curTile.GetComponent<MeshRenderer>();
+            if (renderer != null) renderer.sharedMaterial = mat;
+        }
     }
 
+    void PlaceWorldHazard()
+    {
+        var state = GameManager.gameManager?.state;
+        if (state == null) return;
+
+        int radCount = Mathf.Clamp(1 + state.radiation / 10, 0, 25);
+        int raiderCount = Mathf.Clamp(1 + state.enemyAgressive / 20, 0, 25);
+
+        state.radiationOpportunityCount = radCount;
+        state.raiderOpportunityCount = raiderCount;
+
+        var visited = new HashSet<Vector2Int>();
+        visited.Add(startCoord);
+        visited.Add(farmingCoord);
+        visited.Add(npcCoord);
+        visited.Add(goalCoord);
+
+        PlaceRandomTiles(TileContentType.Radiaition, radCount, visited);
+        PlaceRandomTiles(TileContentType.Raider, raiderCount, visited);
+    }
+
+    void PlaceRandomTiles(TileContentType type, int count, HashSet<Vector2Int> visited)
+    {
+        int placed = 0;
+        int limited = 0;
+
+        while(placed < count && limited <= 1000)
+        {
+            limited++;
+
+            int x = Random.Range(0, width);
+            int y = Random.Range(0, height);
+            Vector2Int coord = new Vector2Int(x, y);
+
+            if(visited.Contains(coord)) continue;
+
+            Tile tile = GetTile(coord);
+            if (tile == null) continue;
+            if(tile.tileContent != TileContentType.None) continue;
+
+            if(type == TileContentType.Radiaition && radiationMat != null)
+            {
+                SetTileContent(coord, type, radiationMat);
+            }
+            else if(type == TileContentType.Raider && raiderMat != null)
+            {
+                SetTileContent(coord, type, raiderMat);
+            }
+
+            visited.Add(coord);
+            placed++;
+        }
+    }
 
     void GenerateTiles()
     {
@@ -98,13 +164,6 @@ public class GridManager : MonoBehaviour
                 tiles[x, y] = curTile;
             }
         }
-
-        //if (placeDebugContents)
-        //{
-        //    SetTileContent(farmingCoord, TileContentType.Farming);
-        //    SetTileContent(npcCoord, TileContentType.NPC);
-        //    SetTileContent(goalCoord, TileContentType.Goal);
-        //}
     }
     void ClearChildren(Transform parent)
     {

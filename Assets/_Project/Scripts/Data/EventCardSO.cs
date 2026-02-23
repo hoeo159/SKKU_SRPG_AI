@@ -7,7 +7,9 @@ public enum  EventEffectType
     AddGold,
     AddGuardAlert,
     AddMerchantTrust,
-    AddEnemyAgressive
+    AddEnemyAgressive,
+    AddShelterComfort,
+    AddRadiation
 }
 
 [Serializable]
