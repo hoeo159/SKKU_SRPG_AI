@@ -54,13 +54,9 @@ public class GridManager : MonoBehaviour
     private void SetTileContent(Vector2Int coord, TileContentType type, Material mat = null)
     {
         Tile curTile = GetTile(coord);
-        if (curTile != null)
-            curTile.SetTileContent(type);
-        if(mat != null)
-        {
-            var renderer = curTile.GetComponent<MeshRenderer>();
-            if (renderer != null) renderer.sharedMaterial = mat;
-        }
+        if (curTile == null) return;
+
+        curTile.SetTileContent(type, mat);
     }
 
     void PlaceWorldHazard()
@@ -80,7 +76,7 @@ public class GridManager : MonoBehaviour
         visited.Add(npcCoord);
         visited.Add(goalCoord);
 
-        PlaceRandomTiles(TileContentType.Radiaition, radCount, visited);
+        PlaceRandomTiles(TileContentType.Radiation, radCount, visited);
         PlaceRandomTiles(TileContentType.Raider, raiderCount, visited);
     }
 
@@ -103,7 +99,7 @@ public class GridManager : MonoBehaviour
             if (tile == null) continue;
             if(tile.tileContent != TileContentType.None) continue;
 
-            if(type == TileContentType.Radiaition && radiationMat != null)
+            if(type == TileContentType.Radiation && radiationMat != null)
             {
                 SetTileContent(coord, type, radiationMat);
             }

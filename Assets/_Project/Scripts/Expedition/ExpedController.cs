@@ -111,11 +111,12 @@ public class ExpedController : MonoBehaviour
     {
         if (tile != null)
         {
-            if (tile == selectedTile)
-            {
-                return;
-            }
-            tile.SetHighlight(isHover);
+            //hover issue : 마우스 클릭해도 hover가 계속 남아 있음
+            //if (tile == selectedTile)
+            //{
+            //    return;
+            //}
+            //tile.SetHighlight(isHover);
         }
     }
 
@@ -165,7 +166,7 @@ public class ExpedController : MonoBehaviour
 
     void OnClickedTile(Tile tile)
     {
-        SelectAndHighlight(tile);
+        //SelectAndHighlight(tile);
 
         if (tile.Occupied) return;
         if (!tile.Walkable) return;
@@ -182,6 +183,7 @@ public class ExpedController : MonoBehaviour
         StartCoroutine(MovePlayer(tile));
     }
 
+    // 선택된 타일 강조 표시 관리 (현재는 사용 안함)
     void SelectAndHighlight(Tile tile)
     {
         if(selectedTile != null)
