@@ -5,6 +5,10 @@ public class UnitDataSO : ScriptableObject
 {
     public string unitName = "Unit Name";
 
+    [Header("Visual")]
+    public Material material;
+    public float unitHeight = 1.0f; // height offset
+
     [Header("Stats")]
     public int maxHealth = 10;
     public int attack = 3;

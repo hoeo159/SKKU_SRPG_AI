@@ -44,7 +44,7 @@ public class EnemyUtilityAI
 
                     float curScore = 0f;
                     curScore += damage * 10f;
-                    if (canKill) curScore += 100f;
+                    if (canKill) curScore += 200f;
                     //if(player.UnitData != null) value += player.UnitData.aiMoveWeight;
 
                     if(curScore > bestTargetScore)

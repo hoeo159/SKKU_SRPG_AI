@@ -16,8 +16,17 @@ public class CombatUnit : MonoBehaviour
 
     public void Init(UnitDataSO udata, Faction fac, Vector2Int coor, Vector3 wPos)
     {
+        // set active
+        this.gameObject.SetActive(true);
+
         unitData = udata;
         faction = fac;
+
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null && unitData != null)
+        {
+            renderer.material = unitData.material;
+        }
 
         HP = (unitData != null) ? unitData.maxHealth : 1;
         SetCoord(coor, wPos);
@@ -25,6 +34,9 @@ public class CombatUnit : MonoBehaviour
 
     public void SetCoord(Vector2Int coor, Vector3 wPos)
     {
+        float h = unitData.unitHeight;
+        wPos.y += h;
+        Debug.Log($"SetCoord: {coor} -> {wPos}");
         coord = coor;
         transform.position = wPos;
     }

@@ -35,8 +35,8 @@ public class BattleController : MonoBehaviour
 
     private void Awake()
     {
-        if(gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
-        if(cam != null) cam = Camera.main;
+        if (gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
+        if (cam != null) cam = Camera.main;
         if (unitParent == null) unitParent = this.transform;
     }
 
@@ -63,6 +63,7 @@ public class BattleController : MonoBehaviour
             return null;
         }
         var unit = Instantiate(unitPrefab, unitParent);
+        //unit.Init(data, fac, coord, tile.transform.position);
         unit.Init(data, fac, coord, tile.transform.position);
 
         tile.Occupied = true;
@@ -85,7 +86,7 @@ public class BattleController : MonoBehaviour
     void BeginTurn()
     {
         playerMoved = false;
-        Debug.Log($"[BeginTurn] Turn Start: {curUnit.Faction}  coord={curUnit.coord}  hp={curUnit.HP}");
+        //Debug.Log($"[BeginTurn] Turn Start: {curUnit.Faction}  coord={curUnit.coord}  hp={curUnit.HP}");
     }
 
     // Update is called once per frame
@@ -134,6 +135,7 @@ public class BattleController : MonoBehaviour
     {
         if(Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
+            Debug.Log("[PlayerTurn] Player ended turn.");
             NextTurn();
             return;
         }
@@ -194,14 +196,14 @@ public class BattleController : MonoBehaviour
         int damage = attacker.DamageTo(target);
         bool killed = target.TakeDamage(damage);
 
-        Debug.Log($"[Attack] {attacker.name} attacked {target.name} for {damage} damage. Target HP: {target.HP}");
+        Debug.Log($"[Attack] {attacker.UnitData.unitName} attacked {target.UnitData.unitName} for {damage} damage. Target HP: {target.HP}");
 
         if(killed)
         {
             Tile tile = gridManager.GetTile(target.coord);
             if(tile != null) tile.Occupied = false;
 
-            Debug.Log($"[Attack] {target.name} died at {target.coord}");
+            Debug.Log($"[Attack] {target.UnitData.unitName} died at {target.coord}");
             target.gameObject.SetActive(false);
         }
     }
@@ -220,6 +222,14 @@ public class BattleController : MonoBehaviour
     void EnemyTurn(CombatUnit enemy)
     {
         var action = EnemyUtilityAI.Select(gridManager, enemy, players);
+
+        Debug.Log($"[EnemyTurn] Enemy selected action: moveTo={action.moveTo} target={action.target?.UnitData.unitName} score={action.score}");
+
+        if (action.moveTo != enemy.coord)
+        {
+            Move(enemy, action.moveTo);
+        }
+
         if (action.target != null && !action.target.isDead)
         {
             int dist = GridPath.Manhattan(enemy.coord, action.target.coord);
@@ -227,10 +237,6 @@ public class BattleController : MonoBehaviour
             {
                 Attack(enemy, action.target);
             }
-        }
-        else if (action.moveTo != enemy.coord)
-        {
-            Move(enemy, action.moveTo);
         }
     }
 

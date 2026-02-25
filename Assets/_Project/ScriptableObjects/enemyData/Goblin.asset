@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
   unitName: Goblin
+  material: {fileID: 2100000, guid: 2e1e204940959e840a66093dc8090585, type: 2}
   maxHealth: 10
   attack: 3
   defense: 1
