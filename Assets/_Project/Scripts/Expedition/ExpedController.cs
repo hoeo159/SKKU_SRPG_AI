@@ -49,6 +49,7 @@ public class ExpedController : MonoBehaviour
         if(state != null)
         {
             state.BeginExped(startCoord);
+            gridManager.RefreshOpportunityCount(state);
         }
     }
 
@@ -59,11 +60,11 @@ public class ExpedController : MonoBehaviour
 
         if (waitingRaiderDecision)
         {
-            if (Keyboard.current != null && Keyboard.current.aKey.isPressed)
+            if (Keyboard.current != null && Keyboard.current.aKey.wasPressedThisFrame)
             {
                 ResolveRaider(true);
             }
-            else if (Keyboard.current != null && Keyboard.current.fKey.isPressed)
+            else if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
             {
                 ResolveRaider(false);
             }
@@ -183,7 +184,7 @@ public class ExpedController : MonoBehaviour
         StartCoroutine(MovePlayer(tile));
     }
 
-    // 선택된 타일 강조 표시 관리 (현재는 사용 안함)
+    // selected tile highlight (지금은 x)
     void SelectAndHighlight(Tile tile)
     {
         if(selectedTile != null)
@@ -234,7 +235,7 @@ public class ExpedController : MonoBehaviour
             case TileContentType.Farming:
                 state.farmingCount++;
                 Debug.Log($"[Farming] ({tile.Coord.x},{tile.Coord.y})  farmingCount={state.farmingCount}");
-                tile.SetTileContent(TileContentType.None);
+                tile.SetTileContent(TileContentType.None); // allow only once per tile
                 break;
 
             case TileContentType.NPC:
@@ -253,6 +254,12 @@ public class ExpedController : MonoBehaviour
                 waitingRaiderDecision = true;
                 pendingRaiderTile = tile;
                 Debug.Log("[Raider] A=Avoid / F=Fight");
+                break;
+
+            case TileContentType.Radiation:
+                state.radiationCount++;
+                Debug.Log($"[Radiation] ({tile.Coord.x},{tile.Coord.y})  radiation={state.radiation}");
+                //tile.SetTileContent(TileContentType.None);
                 break;
         }
     }

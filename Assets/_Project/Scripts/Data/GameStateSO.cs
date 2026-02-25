@@ -14,15 +14,20 @@ public class GameStateSO : ScriptableObject
         public Vector2Int endCoord;
 
         public float durationSecond;
-
         public int turn;
-        public int moveCount;
 
+        public int moveCount;
         public int farmingCount;
         public int talkCount;
-
         public int optionalKillCount;
         public int avoidCount;
+        public int radiationCount;
+
+        public int farmingOpportunityCount;
+        public int talkOpportunityCount;
+        public int raiderOpportunityCount;
+        public int radiationOpportunityCount;
+
     }
 
     [Header("Run State")]
@@ -49,6 +54,7 @@ public class GameStateSO : ScriptableObject
     public int avoidCount           = 0;
     public int farmingCount         = 0;
     public int talkCount            = 0;
+    public int radiationCount       = 0;
 
     [Header("Expedition Opportunity")]
     public int farmingOpportunityCount = 0;
@@ -87,6 +93,7 @@ public class GameStateSO : ScriptableObject
         avoidCount          = 0;
         farmingCount        = 0;
         talkCount           = 0;
+        radiationCount      = 0;
 
         farmingOpportunityCount = 0;
         talkOpportunityCount = 0;
@@ -97,6 +104,7 @@ public class GameStateSO : ScriptableObject
     public void BeginExped(Vector2Int StartCoord)
     {
         ClearExpeditionState();
+
         expedId += 1;
         isExpedding = true;
 
@@ -124,7 +132,13 @@ public class GameStateSO : ScriptableObject
             farmingCount    = farmingCount,
             talkCount       = talkCount,
             optionalKillCount = optionalKillCount,
-            avoidCount      = avoidCount
+            avoidCount      = avoidCount,
+            radiationCount  = radiationCount,
+
+            farmingOpportunityCount = farmingOpportunityCount,
+            talkOpportunityCount = talkOpportunityCount,
+            raiderOpportunityCount = raiderOpportunityCount,
+            radiationOpportunityCount = radiationOpportunityCount
         };
 
         isExpedding = false;
@@ -134,8 +148,14 @@ public class GameStateSO : ScriptableObject
                             $"Duration: {lastExpedSnapShot.durationSecond:F1}s\n" +
                             $"Turns: {lastExpedSnapShot.turn}, Moves: {lastExpedSnapShot.moveCount}\n" +
                             $"Farming: {lastExpedSnapShot.farmingCount}, Talk: {lastExpedSnapShot.talkCount}\n" +
-                            $"OptionalKills: {lastExpedSnapShot.optionalKillCount}, Avoids: {lastExpedSnapShot.avoidCount}\n";
-    
+                            $"OptionalKills: {lastExpedSnapShot.optionalKillCount}, Avoids: {lastExpedSnapShot.avoidCount}\n" +
+                            $"Radiation: {lastExpedSnapShot.radiationCount}\n\n" +
+
+                            $"FarmingOpp: {lastExpedSnapShot.farmingOpportunityCount}\n" +
+                            $"TalkOpp: {lastExpedSnapShot.talkOpportunityCount}\n" +
+                            $"RaiderOpp: {lastExpedSnapShot.raiderOpportunityCount}\n"+
+                            $"RadiationOpp: {lastExpedSnapShot.radiationOpportunityCount}\n";
+
         ProfileCalculator.ApplyFromExpedition(this);
     }
 }

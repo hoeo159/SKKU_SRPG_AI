@@ -42,7 +42,6 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         GenerateTiles();
-        PlaceWorldHazard();
 
         if (placeDebugContents)
         {
@@ -50,6 +49,8 @@ public class GridManager : MonoBehaviour
             SetTileContent(npcCoord, TileContentType.NPC, npcMat);
             SetTileContent(goalCoord, TileContentType.Goal, goalMat);
         }
+
+        PlaceWorldHazard();
     }
     private void SetTileContent(Vector2Int coord, TileContentType type, Material mat = null)
     {
@@ -65,10 +66,10 @@ public class GridManager : MonoBehaviour
         if (state == null) return;
 
         int radCount = Mathf.Clamp(1 + state.radiation / 10, 0, 25);
-        int raiderCount = Mathf.Clamp(1 + state.enemyAgressive / 20, 0, 25);
+        int raiderCount = Mathf.Clamp(1 + (state.enemyAgressive - state.guardAlert) / 20, 0, 25);
 
-        state.radiationOpportunityCount = radCount;
-        state.raiderOpportunityCount = raiderCount;
+        //state.radiationOpportunityCount = radCount;
+        //state.raiderOpportunityCount = raiderCount;
 
         var visited = new HashSet<Vector2Int>();
         visited.Add(startCoord);
@@ -78,6 +79,8 @@ public class GridManager : MonoBehaviour
 
         PlaceRandomTiles(TileContentType.Radiation, radCount, visited);
         PlaceRandomTiles(TileContentType.Raider, raiderCount, visited);
+
+        RefreshOpportunityCount(state);
     }
 
     void PlaceRandomTiles(TileContentType type, int count, HashSet<Vector2Int> visited)
@@ -173,6 +176,43 @@ public class GridManager : MonoBehaviour
             Destroy(curGameObject);
 #endif
         }
+    }
+    public void RefreshOpportunityCount(GameStateSO state)
+    {
+        if (state == null || tiles == null) return;
+        int farmingOpp = 0;
+        int talkOpp = 0;
+        int raiderOpp = 0;
+        int radiationOpp = 0;
+
+        for(int y = 0; y < height; y++)
+        {
+            for(int x = 0; x < width; x++)
+            {
+                Tile tile = tiles[x, y];
+                if (tile == null) continue;
+                switch(tile.tileContent)
+                {
+                    case TileContentType.Farming:
+                        farmingOpp++;
+                        break;
+                    case TileContentType.NPC:
+                        talkOpp++;
+                        break;
+                    case TileContentType.Raider:
+                        raiderOpp++;
+                        break;
+                    case TileContentType.Radiation:
+                        radiationOpp++;
+                        break;
+                }
+            }
+        }
+
+        state.farmingOpportunityCount = farmingOpp;
+        state.talkOpportunityCount = talkOpp;
+        state.raiderOpportunityCount = raiderOpp;
+        state.radiationOpportunityCount = radiationOpp;
     }
 }
 

@@ -17,6 +17,20 @@ public struct BehaviorSummary
     public int talkCount;
     public int optionalKillCount;
     public int avoidCount;
+    public int radiationCount;
+
+    public int farmingOpportunityCount;
+    public int talkOpportunityCount;
+    public int raiderOpportunityCount;
+    public int radiationOpportunityCount;
+
+    public float farmingPerOpp;
+    public float talkPerOpp;
+    public float killPerOpp;
+    public float avoidPerOpp;
+    public float radiationPerOpp;
+
+    public float detourRate;
 
     public int manhattanDist; // change to average move later collecting more data
     public int extraMove;
@@ -26,8 +40,20 @@ public struct BehaviorSummary
     public static BehaviorSummary ReadExpedSnapshot(GameStateSO.ExpedSnapShot snap)
     {
         int dist = Mathf.Abs(snap.startCoord.x - snap.endCoord.x) + Mathf.Abs(snap.startCoord.y - snap.endCoord.y);
-        int extraMove = snap.moveCount - dist;
-        extraMove = extraMove < 0 ? 0 : extraMove;
+        int exMove = snap.moveCount - dist;
+        exMove = exMove < 0 ? 0 : exMove;
+
+        int farmingOpp = snap.farmingOpportunityCount;
+        int talkOpp = snap.talkOpportunityCount;
+        int raiderOpp = snap.raiderOpportunityCount;
+        int radiationOpp = snap.radiationOpportunityCount;
+
+        float fPerOpp = (farmingOpp > 0) ? (float)snap.farmingCount / farmingOpp : 0.5f;
+        float tPerOpp    = (talkOpp > 0) ? (float)snap.talkCount / talkOpp : 0.5f;
+        float kPerOpp    = (raiderOpp > 0) ? (float)snap.optionalKillCount / raiderOpp : 0.5f;
+        float aPerOpp   = (raiderOpp > 0) ? (float)snap.avoidCount / raiderOpp : 0.5f;
+        float radPerOpp     = (radiationOpp > 0) ? (float)snap.radiationCount / radiationOpp : 0.5f;
+        float detourRate    = (snap.moveCount > 0) ? (float)exMove / snap.moveCount : 0;
 
         return new BehaviorSummary
         {
@@ -41,8 +67,21 @@ public struct BehaviorSummary
             talkCount           = snap.talkCount,
             optionalKillCount   = snap.optionalKillCount,
             avoidCount          = snap.avoidCount,
+            radiationCount      = snap.radiationCount,
+
+            farmingOpportunityCount = snap.farmingOpportunityCount,
+            talkOpportunityCount    = snap.talkOpportunityCount,
+            raiderOpportunityCount  = snap.raiderOpportunityCount,
+            radiationOpportunityCount = snap.radiationOpportunityCount,
+
+            farmingPerOpp       = fPerOpp,
+            talkPerOpp          = tPerOpp,
+            killPerOpp          = kPerOpp,
+            avoidPerOpp         = aPerOpp,
+            radiationPerOpp     = radPerOpp,
+
             manhattanDist       = dist,
-            extraMove           = extraMove,
+            extraMove           = exMove,
             farmingPerMove      = snap.moveCount > 0 ? (float)snap.farmingCount / snap.moveCount : 0,
             talkPerMove         = snap.moveCount > 0 ? (float)snap.talkCount / snap.moveCount : 0
         };
@@ -50,6 +89,6 @@ public struct BehaviorSummary
 
     public string WriteJson()
     {
-        return JsonUtility.ToJson(this);
+        return JsonUtility.ToJson(this, true);
     }
 }

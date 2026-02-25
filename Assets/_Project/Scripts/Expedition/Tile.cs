@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour
     [SerializeField]            private GameObject  highlight;
 
     // issue : tile type이 바뀔 때 material을 가져오지 못함, 기존의 material을 캐싱해야 할 듯
+    [Header("Tile Content")]
     [SerializeField] private MeshRenderer tileRenderer;
     private Material baseMaterial;
     public TileContentType tileContent { get; private set; } = TileContentType.None;
