@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class BattleController : MonoBehaviour
 {
@@ -24,19 +25,29 @@ public class BattleController : MonoBehaviour
     [SerializeField] private Vector2Int playerSpawnPos = new Vector2Int(1, 1);
     [SerializeField] private Vector2Int enemySpawnPos = new Vector2Int(8, 8);
 
+    [Header("Move Animation")]
+    [SerializeField] private float stepDuration = 0.05f;
+    [SerializeField] private float moveWait = 0.5f;
+
+    [Header("Camera Focus")]
+    [SerializeField] private Trackball cameraRig;
+    [SerializeField] private bool autoFocusOnTurnStart = true;
+    [SerializeField] private bool snapFocus = false;
+
     private readonly List<CombatUnit> players   = new();
     private readonly List<CombatUnit> enemies   = new();
     private readonly List<CombatUnit> turnOrder = new();
 
     private int turnIndex = 0;
-    private bool playerMoved = false;
+    private bool isMoving = false;
+    private bool isCoroutine = false;
 
     private CombatUnit curUnit => (turnOrder.Count > 0) ? turnOrder[turnIndex] : null;
 
     private void Awake()
     {
         if (gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
-        if (cam != null) cam = Camera.main;
+        if (cam == null) cam = Camera.main;
         if (unitParent == null) unitParent = this.transform;
     }
 
@@ -85,13 +96,17 @@ public class BattleController : MonoBehaviour
 
     void BeginTurn()
     {
-        playerMoved = false;
+        isMoving = false;
+
+        if (autoFocusOnTurnStart && cameraRig != null && curUnit != null)
+            cameraRig.FocusTo(curUnit.transform, snapFocus);
         //Debug.Log($"[BeginTurn] Turn Start: {curUnit.Faction}  coord={curUnit.coord}  hp={curUnit.HP}");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isCoroutine) return;
         if(turnOrder.Count == 0)
         {
             Debug.Log("[BattleController] No units in battle.");
@@ -113,8 +128,8 @@ public class BattleController : MonoBehaviour
         }
         else if(cur.Faction == Faction.Enemy)
         {
-            EnemyTurn(cur);
-            NextTurn();
+            isCoroutine = true;
+            StartCoroutine(EnemyTurnRoutine(cur));
         }
     }
 
@@ -126,7 +141,7 @@ public class BattleController : MonoBehaviour
             turnIndex = (turnIndex + 1) % turnOrder.Count;
             limit++;
         }
-        while ((curUnit == null || curUnit.isDead) || limit > 100);
+        while ((curUnit == null || curUnit.isDead) && limit < 100);
 
         BeginTurn();
     }
@@ -156,15 +171,106 @@ public class BattleController : MonoBehaviour
                 }
             }
 
-            if(!playerMoved && TryRaycastTile(out Tile tile))
+            if(!isMoving && TryRaycastTile(out Tile tile))
             {
                 var reach = GridPath.BFS_Reachable(gridManager, unit.coord, unit.UnitData.moveRange);
                 if(reach.dist.ContainsKey(tile.Coord))
                 {
-                    Move(unit, tile.Coord);
-                    playerMoved = true;
+                    var path = GridPath.ReconstructPath(reach, unit.coord, tile.Coord);
+
+                    if (path.Count > 0)
+                    {
+                        isMoving = true;
+                        isCoroutine = true;
+                        StartCoroutine(PlayerMoveRoutine(unit, path));
+                    }
                 }
             }
+        }
+    }
+
+    IEnumerator PlayerMoveRoutine(CombatUnit unit, List<Vector2Int> path)
+    {
+        yield return MoveRoutine(unit, path);
+        yield return new WaitForSeconds(moveWait);
+        isCoroutine = false;
+    }
+
+    IEnumerator EnemyTurnRoutine(CombatUnit enemy)
+    {
+        var action = EnemyUtilityAI.Select(gridManager, enemy, players);
+
+        Debug.Log($"[EnemyTurn] Enemy selected action: moveTo={action.moveTo} target={action.target?.UnitData.unitName} score={action.score}");
+
+        // 이동
+        if (action.moveTo != enemy.coord)
+        {
+            var reach = GridPath.BFS_Reachable(gridManager, enemy.coord, enemy.UnitData.moveRange);
+            var path = GridPath.ReconstructPath(reach, enemy.coord, action.moveTo);
+
+            if (path.Count > 0)
+                yield return MoveRoutine(enemy, path);
+
+            yield return new WaitForSeconds(moveWait);
+        }
+
+        // 이동 후 공격
+        if (action.target != null && !action.target.isDead)
+        {
+            int dist = GridPath.Manhattan(enemy.coord, action.target.coord);
+            if (dist <= enemy.UnitData.attackRange)
+                Attack(enemy, action.target);
+        }
+
+        yield return new WaitForSeconds(moveWait);
+
+        isCoroutine = false;
+        NextTurn();
+    }
+    IEnumerator MoveRoutine(CombatUnit unit, List<Vector2Int> path, bool isFollowCam = true)
+    {
+        if (path == null || path.Count == 0) yield break;
+
+        Vector2Int dest = path[^1];
+        Tile src = gridManager.GetTile(unit.coord);
+        Tile dst = gridManager.GetTile(dest);
+
+        if (dst == null || dst.Occupied)
+            yield break;
+
+        if (src != null) src.Occupied = false;
+        dst.Occupied = true;
+        float h = unit.UnitData.unitHeight;
+
+        for (int i = 0; i < path.Count; i++)
+        {
+            Vector2Int step = path[i];
+            Tile t = gridManager.GetTile(step);
+            if (t == null) continue;
+
+            Vector3 startPos = unit.transform.position;
+            Vector3 endPos = t.transform.position;
+            endPos.y += h;
+
+            float elapsed = 0f;
+            float dur = Mathf.Max(0.001f, stepDuration);
+
+            while (elapsed < dur)
+            {
+                elapsed += Time.deltaTime;
+                float u = Mathf.Clamp01(elapsed / dur);
+
+                //u = u * u * (3f - 2f * u);
+
+                unit.transform.position = Vector3.Lerp(startPos, endPos, u);
+
+                if(cameraRig != null && isFollowCam)
+                    cameraRig.FocusTo(unit.transform, false);
+
+                yield return null;
+            }
+
+            unit.SetCoord(step, t.transform.position);
         }
     }
 
@@ -205,38 +311,6 @@ public class BattleController : MonoBehaviour
 
             Debug.Log($"[Attack] {target.UnitData.unitName} died at {target.coord}");
             target.gameObject.SetActive(false);
-        }
-    }
-
-    void Move(CombatUnit unit, Vector2Int dest)
-    {
-        Tile src = gridManager.GetTile(unit.coord);
-        Tile dst = gridManager.GetTile(dest);
-        if (dst == null || dst.Occupied) return;
-        if (src != null) src.Occupied = false;
-
-        unit.SetCoord(dest, dst.transform.position);
-        dst.Occupied = true;
-    }
-
-    void EnemyTurn(CombatUnit enemy)
-    {
-        var action = EnemyUtilityAI.Select(gridManager, enemy, players);
-
-        Debug.Log($"[EnemyTurn] Enemy selected action: moveTo={action.moveTo} target={action.target?.UnitData.unitName} score={action.score}");
-
-        if (action.moveTo != enemy.coord)
-        {
-            Move(enemy, action.moveTo);
-        }
-
-        if (action.target != null && !action.target.isDead)
-        {
-            int dist = GridPath.Manhattan(enemy.coord, action.target.coord);
-            if (dist <= enemy.UnitData.attackRange)
-            {
-                Attack(enemy, action.target);
-            }
         }
     }
 

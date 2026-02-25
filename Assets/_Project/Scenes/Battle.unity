@@ -224,7 +224,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
@@ -249,13 +249,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 33954156}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.27781588, y: 0.36497167, z: -0.1150751, w: 0.8811196}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 35, y: 45, z: 0}
+  m_Father: {fileID: 1518619080}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &696488634
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,6 +299,9 @@ MonoBehaviour:
   enemyData: {fileID: 11400000, guid: 1aad12b9d3db18e4b8d755726cac227c, type: 2}
   playerSpawnPos: {x: 1, y: 1}
   enemySpawnPos: {x: 8, y: 8}
+  cameraRig: {fileID: 1518619079}
+  autoFocusOnTurnStart: 1
+  snapFocus: 0
 --- !u!4 &696488636
 Transform:
   m_ObjectHideFlags: 0
@@ -544,6 +547,69 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &1518619078
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1518619080}
+  - component: {fileID: 1518619079}
+  m_Layer: 0
+  m_Name: CameraRig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1518619079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518619078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c26cf9b4a11817b488ac55083ca23b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Trackball
+  cam: {fileID: 33954159}
+  pivot: {fileID: 0}
+  focusTarget: {fileID: 2131810935}
+  orbitEnabled: 1
+  orbitSpeed: 0.2
+  minPitch: 25
+  maxPitch: 80
+  invertY: 1
+  panEnabled: 1
+  panSpeed: 0.02
+  zoomEnabled: 1
+  zoomSpeed: 0.1
+  minOrthoSize: 4
+  maxOrthoSize: 25
+  minDistance: 6
+  maxDistance: 60
+  positionLerp: 15
+  rotationLerp: 15
+--- !u!4 &1518619080
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518619078}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 33954160}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2131810935 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4944377341254371922, guid: ac75e5e773e790646a8e05e48716b080, type: 3}
@@ -623,7 +689,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1098248408}
-  - {fileID: 33954160}
   - {fileID: 1196556095}
   - {fileID: 7891172217085335201}
   - {fileID: 696488636}
+  - {fileID: 1518619080}

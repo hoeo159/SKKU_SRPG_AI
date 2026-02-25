@@ -36,7 +36,6 @@ public class CombatUnit : MonoBehaviour
     {
         float h = unitData.unitHeight;
         wPos.y += h;
-        Debug.Log($"SetCoord: {coor} -> {wPos}");
         coord = coor;
         transform.position = wPos;
     }

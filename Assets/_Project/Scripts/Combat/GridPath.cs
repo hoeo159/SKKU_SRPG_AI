@@ -38,6 +38,7 @@ public static class GridPath
 
                 Tile tile = gridManager.GetTile(next);
                 if (tile == null || !tile.Walkable || tile.Occupied) continue;
+                if (curDist + 1 > maxStep) continue;
 
                 dist[next] = curDist + 1;
                 prev[next] = cur;

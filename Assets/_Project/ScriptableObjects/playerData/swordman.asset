@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: swordman
   m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
   unitName: swordman
-  material: {fileID: 2100000, guid: f701f2df66946654bb51c28074b23c09, type: 2}
+  material: {fileID: 2100000, guid: 1759ec10bc4b59344ace0ec230291ee4, type: 2}
+  unitHeight: 1
   maxHealth: 20
   attack: 5
   defense: 1
   speed: 4
-  moveRange: 4
+  moveRange: 3
   attackRange: 1
   aiMoveWeight: 0
