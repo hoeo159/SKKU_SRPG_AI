@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System.Collections;
 
+
 public class BattleController : MonoBehaviour
 {
     [Header("Reference")]
@@ -260,7 +261,7 @@ public class BattleController : MonoBehaviour
                 elapsed += Time.deltaTime;
                 float u = Mathf.Clamp01(elapsed / dur);
 
-                //u = u * u * (3f - 2f * u);
+                u = u * u * (3f - 2f * u);
 
                 unit.transform.position = Vector3.Lerp(startPos, endPos, u);
 

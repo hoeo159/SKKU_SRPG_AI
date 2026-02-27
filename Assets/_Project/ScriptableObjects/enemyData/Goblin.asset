@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
   unitName: Goblin
+  faction: 2
   material: {fileID: 2100000, guid: 2e1e204940959e840a66093dc8090585, type: 2}
   unitHeight: 1
   maxHealth: 10
   attack: 3
   defense: 1
-  speed: 5
+  speed: 4
   moveRange: 4
   attackRange: 1
+  sightRange: 2
+  patrolRange: 2
   aiMoveWeight: 0

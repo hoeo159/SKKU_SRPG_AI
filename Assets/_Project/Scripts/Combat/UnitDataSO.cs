@@ -3,7 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UnitData", menuName = "Scriptable Objects/UnitData")]
 public class UnitDataSO : ScriptableObject
 {
+    [Header("Unit Info")]
     public string unitName = "Unit Name";
+    public Faction faction = Faction.None;
 
     [Header("Visual")]
     public Material material;
@@ -18,6 +20,10 @@ public class UnitDataSO : ScriptableObject
     [Header("Action Ranges")]
     public int moveRange = 4; // BFS
     public int attackRange = 1; // Manhattan
+
+    [Header("npc only")]
+    public int sightRange = 4;
+    public int patrolRange = 3;
 
     [Header("AI Values")] // TBD
     public int aiMoveWeight = 0;

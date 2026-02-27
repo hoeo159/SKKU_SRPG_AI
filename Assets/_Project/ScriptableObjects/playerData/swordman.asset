@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: swordman
   m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
   unitName: swordman
+  faction: 1
   material: {fileID: 2100000, guid: 1759ec10bc4b59344ace0ec230291ee4, type: 2}
   unitHeight: 1
   maxHealth: 20
@@ -21,4 +22,6 @@ MonoBehaviour:
   speed: 4
   moveRange: 3
   attackRange: 1
+  sightRange: 0
+  patrolRange: 0
   aiMoveWeight: 0

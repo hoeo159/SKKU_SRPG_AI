@@ -14,6 +14,11 @@ public class CombatUnit : MonoBehaviour
 
     public bool isDead => HP <= 0;
 
+    public void Init(UnitDataSO data, Vector2Int coord, Vector3 wPos)
+    {
+        Init(data, data != null ? data.faction : Faction.Neutral, coord, wPos);
+    }
+
     public void Init(UnitDataSO udata, Faction fac, Vector2Int coor, Vector3 wPos)
     {
         // set active
