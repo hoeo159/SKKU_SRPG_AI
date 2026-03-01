@@ -33,7 +33,7 @@ public class EnemyUtilityAI
 
             foreach(var player in players)
             {
-                if(player.isDead || player == null) continue;
+                if(player == null || player.isDead) continue;
 
                 int dist = GridPath.Manhattan(candidate, player.coord);
                 if(dist <= enemy.UnitData.attackRange)

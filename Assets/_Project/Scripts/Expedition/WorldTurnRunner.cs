@@ -35,6 +35,7 @@ public class WorldTurnRunner : MonoBehaviour
 
         // enemy turn
         EnemyController[] enemyControllers = FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
+        Debug.Log($"[RunWorldTurn] enemies = {enemyControllers.Length}");
         foreach(var enemy in enemyControllers)
         {
             if (enemy == null) continue;

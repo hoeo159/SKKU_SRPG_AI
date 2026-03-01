@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
+
+[RequireComponent(typeof(CombatUnit))]
 public class EnemyController : MonoBehaviour
 {
     [Header("References")]
@@ -39,8 +41,10 @@ public class EnemyController : MonoBehaviour
     // world turn 1에 행동하는 enemy action
     public IEnumerator TakeTurn(GameStateSO state, List<CombatUnit> playerUnits)
     {
+        Debug.Log($"[Enemy Turn] {self.UnitData.unitName} is taking turn. coord = {self.coord}");
         if (self == null || self.isDead) yield break;
         if(gridManager == null) yield break;
+
         if(!isSetHome)
         {
             home = self.coord;
@@ -56,7 +60,7 @@ public class EnemyController : MonoBehaviour
         // If the target is within attack range, attack it and end turn
         if (distToTarget <= self.UnitData.attackRange)
         {
-            Attack(target);
+            CombatAction.Attack(gridManager, self, target);
             yield return new WaitForSeconds(actionDelay);
             yield break;
         }
@@ -117,6 +121,7 @@ public class EnemyController : MonoBehaviour
         {
             Vector2Int next = self.coord + dir;
             Tile tile = gridManager.GetTile(next);
+
             if (tile == null) continue;
             if (!tile.Walkable) continue;
             if (tile.Occupied) continue;
@@ -134,7 +139,9 @@ public class EnemyController : MonoBehaviour
 
         Vector2Int dst = candidates[Random.Range(0, candidates.Count)];
         List<Vector2Int> path = new List<Vector2Int>() { dst };
-        yield return Move(path);
+
+        yield return CombatAction.Move(gridManager, self, path, stepDuration);
+        yield return new WaitForSeconds(actionDelay);
     }
 
     IEnumerator ChaseUsingUtility(List<CombatUnit> playerUnits)
@@ -149,77 +156,18 @@ public class EnemyController : MonoBehaviour
 
             if(path != null && path.Count > 0)
             {
-                yield return Move(path);
+                yield return CombatAction.Move(gridManager, self, path, stepDuration);
             }
+            yield return new WaitForSeconds(actionDelay);
         }    
-
-        yield return new WaitForSeconds(actionDelay);
 
         if(action.target != null && !action.target.isDead)
         {
             int dst = GridPath.Manhattan(self.coord, action.target.coord);
             if(dst <= self.UnitData.attackRange)
             {
-                Attack(action.target);
+                CombatAction.Attack(gridManager, self, action.target);
             }
-        }
-    }
-
-    IEnumerator Move(List<Vector2Int> path)
-    {
-        if(path == null || path.Count == 0) yield break;
-
-        int srcIdx = (path[0] == self.coord) ? 1 : 0;
-        if (srcIdx >= path.Count) yield break;
-
-        Vector2Int _dst = path[path.Count - 1];
-
-        Tile src = gridManager.GetTile(self.coord);
-        Tile dst = gridManager.GetTile(_dst);
-
-        if (dst == null || dst.Occupied) yield break;
-        dst.Occupied = true;
-
-        float height = self.UnitData.unitHeight;
-        int len = path.Count;
-        for(int i = srcIdx; i < len; i++)
-        {
-            Vector2Int coord = path[i];
-            Tile tile = gridManager.GetTile(coord);
-            if (tile == null) continue;
-
-            Vector3 startPos = self.transform.position;
-            Vector3 endPos = tile.transform.position;
-            endPos.y += height;
-
-            float elapsed = 0f;
-            float duration = Mathf.Max(0.001f, stepDuration);
-            while(elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float u = Mathf.Clamp01(elapsed / duration);
-                u = u * u * (3f - 2f * u);
-
-                self.transform.position = Vector3.Lerp(startPos, endPos, u);
-                yield return null;
-            }
-
-            self.SetCoord(coord, tile.transform.position);
-        }
-    }
-
-    void Attack(CombatUnit target)
-    {
-        int damage = self.DamageTo(target);
-        bool isKilled = target.TakeDamage(damage);
-
-        Debug.Log($"[Attack] {self.UnitData.unitName} attacked {target.UnitData.unitName} for {damage} damage. Target HP: {target.HP}");
-        if(isKilled)
-        {
-            Tile tile = gridManager.GetTile(target.coord);
-            if(tile != null) tile.Occupied = false;
-
-            target.gameObject.SetActive(false);
         }
     }
 }

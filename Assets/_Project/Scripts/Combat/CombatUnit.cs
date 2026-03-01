@@ -39,7 +39,7 @@ public class CombatUnit : MonoBehaviour
 
     public void SetCoord(Vector2Int coor, Vector3 wPos)
     {
-        float h = unitData.unitHeight;
+        float h = (unitData != null) ? unitData.unitHeight : 0f;
         wPos.y += h;
         coord = coor;
         transform.position = wPos;
@@ -58,11 +58,16 @@ public class CombatUnit : MonoBehaviour
     public bool TakeDamage(int value)
     {
         HP -= value;
-        if(HP < 0)
+        if(HP <= 0)
         {
             HP = 0;
             return true;
         }
         return false;
+    }
+
+    public void SyncCoord(Vector2Int syncCoord)
+    {
+        coord = syncCoord;
     }
 }
