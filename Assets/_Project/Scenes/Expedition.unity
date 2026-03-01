@@ -556,7 +556,7 @@ GameObject:
   - component: {fileID: 247157139}
   - component: {fileID: 247157140}
   m_Layer: 0
-  m_Name: CombatUnit
+  m_Name: Combat Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -836,7 +836,7 @@ GameObject:
   - component: {fileID: 919749715}
   - component: {fileID: 919749714}
   m_Layer: 0
-  m_Name: WorldTurnRunner
+  m_Name: World Turn Runner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -855,8 +855,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldTurnRunner
   gridManager: {fileID: 1716877131}
-  playerUnit: {fileID: 1054402074}
-  isNeutral: 1
 --- !u!4 &919749715
 Transform:
   m_ObjectHideFlags: 0
@@ -1028,7 +1026,7 @@ GameObject:
   - component: {fileID: 1082890117}
   - component: {fileID: 1082890116}
   m_Layer: 0
-  m_Name: ExpedController
+  m_Name: Exped Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1049,6 +1047,9 @@ MonoBehaviour:
   gridManager: {fileID: 1716877131}
   player: {fileID: 1054402073}
   cam: {fileID: 1309815723}
+  playerUnits:
+  - {fileID: 1054402074}
+  - {fileID: 247157140}
   tileMask:
     serializedVersion: 2
     m_Bits: 64
@@ -1067,6 +1068,69 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1272149362
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1272149364}
+  - component: {fileID: 1272149363}
+  m_Layer: 0
+  m_Name: Camera Rig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1272149363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272149362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c26cf9b4a11817b488ac55083ca23b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Trackball
+  cam: {fileID: 1309815723}
+  pivot: {fileID: 0}
+  focusTarget: {fileID: 0}
+  orbitEnabled: 1
+  orbitSpeed: 0.2
+  minPitch: 25
+  maxPitch: 80
+  invertY: 1
+  panEnabled: 1
+  panSpeed: 0.1
+  zoomEnabled: 1
+  zoomSpeed: 1
+  minOrthoSize: 4
+  maxOrthoSize: 25
+  minDistance: 6
+  maxDistance: 60
+  positionLerp: 15
+  rotationLerp: 15
+--- !u!4 &1272149364
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272149362}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1309815724}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1309815720
@@ -1173,8 +1237,8 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
-  orthographic: 1
+  field of view: 30
+  orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
@@ -1199,13 +1263,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309815720}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.27781588, y: 0.36497167, z: -0.1150751, w: 0.8811196}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 35, y: 45, z: 0}
+  m_Father: {fileID: 1272149364}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1413488278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,4 +1811,4 @@ SceneRoots:
   - {fileID: 1082890117}
   - {fileID: 919749715}
   - {fileID: 247157144}
-  - {fileID: 1309815724}
+  - {fileID: 1272149364}

@@ -60,6 +60,7 @@ public class Trackball : MonoBehaviour
         desiredYaw = yaw = e.y;
 
         pitch = NormalizePitch(e.x);
+        pitch += 20;
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
         desiredPitch = pitch;
 

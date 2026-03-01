@@ -34,7 +34,10 @@ public class CombatUnit : MonoBehaviour
         }
 
         HP = (unitData != null) ? unitData.maxHealth : 1;
-        SetCoord(coor, wPos);
+
+        float h = (unitData != null) ? unitData.unitHeight : 0f;
+        coord = coor;
+        transform.position = wPos;
     }
 
     public void SetCoord(Vector2Int coor, Vector3 wPos)

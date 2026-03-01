@@ -6,8 +6,6 @@ public class WorldTurnRunner : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GridManager gridManager;
-    [SerializeField] private CombatUnit playerUnit;
-    [SerializeField] private bool isNeutral = true;
 
     public bool busy { get; private set; } = false;
 
@@ -18,24 +16,31 @@ public class WorldTurnRunner : MonoBehaviour
         if(gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
     }
 
-    public void SetPlayer(CombatUnit player)
+    void RefreshPlayerUnits()
     {
-        playerUnit = player;
-
         playerUnits.Clear();
-        if (playerUnit != null) playerUnits.Add(playerUnit);
+
+        var units = FindObjectsByType<CombatUnit>(FindObjectsSortMode.None);
+        foreach (var u in units)
+        {
+            if (u == null || u.isDead) continue;
+            if (u.Faction != Faction.Player) continue;
+            playerUnits.Add(u);
+        }
     }
+
 
     public IEnumerator RunWorldTurn()
     {
         if (busy) yield break;
         busy = true;
 
+        RefreshPlayerUnits();
+
         GameStateSO state = GameManager.gameManager != null ? GameManager.gameManager.state : null;
 
         // enemy turn
         EnemyController[] enemyControllers = FindObjectsByType<EnemyController>(FindObjectsSortMode.None);
-        Debug.Log($"[RunWorldTurn] enemies = {enemyControllers.Length}");
         foreach(var enemy in enemyControllers)
         {
             if (enemy == null) continue;
@@ -43,28 +48,16 @@ public class WorldTurnRunner : MonoBehaviour
         }
 
         // npc turn
-        if (isNeutral)
-        {
-            NpcController[] npcs = FindObjectsByType<NpcController>(FindObjectsSortMode.None);
-            foreach (var npc in npcs)
-            {
-                if (npc == null) continue;
-                yield return npc.TakeTurn(state, playerUnit);
-            }
-        }
+        //if (isNeutral)
+        //{
+        //    NpcController[] npcs = FindObjectsByType<NpcController>(FindObjectsSortMode.None);
+        //    foreach (var npc in npcs)
+        //    {
+        //        if (npc == null) continue;
+        //        yield return npc.TakeTurn(state, playerUnits);
+        //    }
+        //}
 
         busy = false;
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -177,6 +177,14 @@ public class GridManager : MonoBehaviour
 #endif
         }
     }
+
+    public Vector2Int WorldToGridCoord(Vector3 worldPos)
+    {
+        int x = Mathf.RoundToInt(worldPos.x / tileSize);
+        int y = Mathf.RoundToInt(worldPos.z / tileSize);
+        return new Vector2Int(x, y);
+    }
+
     public void RefreshOpportunityCount(GameStateSO state)
     {
         if (state == null || tiles == null) return;

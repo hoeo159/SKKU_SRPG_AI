@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -41,9 +40,10 @@ public class EnemyController : MonoBehaviour
     // world turn 1에 행동하는 enemy action
     public IEnumerator TakeTurn(GameStateSO state, List<CombatUnit> playerUnits)
     {
-        Debug.Log($"[Enemy Turn] {self.UnitData.unitName} is taking turn. coord = {self.coord}");
         if (self == null || self.isDead) yield break;
+        if (self.UnitData == null) yield break;
         if(gridManager == null) yield break;
+        Debug.Log($"[Enemy Turn] {self.UnitData.unitName} is taking turn. coord = {self.coord}");
 
         if(!isSetHome)
         {
@@ -126,7 +126,7 @@ public class EnemyController : MonoBehaviour
             if (!tile.Walkable) continue;
             if (tile.Occupied) continue;
 
-            if (GridPath.Manhattan(next, home) >= self.UnitData.patrolRange) continue;
+            if (GridPath.Manhattan(next, home) > self.UnitData.patrolRange) continue;
 
             candidates.Add(next);
         }
@@ -158,8 +158,8 @@ public class EnemyController : MonoBehaviour
             {
                 yield return CombatAction.Move(gridManager, self, path, stepDuration);
             }
-            yield return new WaitForSeconds(actionDelay);
         }    
+        yield return new WaitForSeconds(actionDelay);
 
         if(action.target != null && !action.target.isDead)
         {

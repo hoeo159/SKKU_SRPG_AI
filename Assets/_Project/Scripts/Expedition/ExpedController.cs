@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class ExpedController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class ExpedController : MonoBehaviour
     [SerializeField] private GridManager    gridManager;
     [SerializeField] private ExpedPlayer    player;
     [SerializeField] private Camera         cam;
+    [SerializeField] private List<CombatUnit> playerUnits;
 
     [Header("Raycast")]
     [SerializeField] private LayerMask tileMask;
@@ -29,15 +31,18 @@ public class ExpedController : MonoBehaviour
     {
         if (cam == null)    cam = Camera.main;
         if (player == null) player = FindFirstObjectByType<ExpedPlayer>();
+        if (gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
         if (worldTurnRunner == null) worldTurnRunner = FindFirstObjectByType<WorldTurnRunner>();
         if (playerUnit == null && player != null) playerUnit = player.GetComponent<CombatUnit>();
+        if (playerUnits == null || playerUnits.Count == 0)
+        {
+            playerUnits = new List<CombatUnit>();
+        }
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
-
         Vector2Int startCoord = new Vector2Int(0, 0);
         Tile startTile = gridManager.GetTile(startCoord);
 
@@ -51,13 +56,20 @@ public class ExpedController : MonoBehaviour
             Debug.LogError("[ExpedController] Start tile not found at coordinate: " + startCoord);
         }
 
-        if(playerUnit != null)
+        //if (playerUnit != null && playerUnit.UnitData != null && startTile != null)
+        //{
+        //    playerUnit.Init(playerUnit.UnitData, startCoord, startTile.transform.position);
+        //}
+
+        foreach(var unit in playerUnits)
         {
-            playerUnit.SyncCoord(startCoord);
-        }
-        if(worldTurnRunner != null)
-        {
-            worldTurnRunner.SetPlayer(playerUnit);
+            if (unit != null && unit.UnitData != null)
+            {
+                Faction faction = unit.UnitData.faction;
+                Vector3 wpos = unit.transform.position;
+                Vector2Int gpos = gridManager.WorldToGridCoord(wpos);
+                unit.Init(unit.UnitData, faction, gpos, wpos);
+            }
         }
 
         var state = GameManager.gameManager?.state;
@@ -196,7 +208,7 @@ public class ExpedController : MonoBehaviour
         bool adjacent = (dx + dy) <= player.maxMoveDistance;
         if(!adjacent)
         {
-            Debug.Log("[ExpedController] Clicked tile is not adjacent to the player.");
+            Debug.Log("[ExpedController] too far");
             return;
         }
 
@@ -226,6 +238,13 @@ public class ExpedController : MonoBehaviour
         Tile src = gridManager.GetTile(player.Coord);
         if (src != null) src.Occupied = false;
         dest.Occupied = true;
+
+        //Vector3 moveTargetPos = dest.transform.position;
+        //if (playerUnit != null && playerUnit.UnitData != null)
+        //{
+        //    moveTargetPos.y += playerUnit.UnitData.unitHeight;
+        //}
+
 
         yield return player.MoveTo(dest.Coord, dest.transform.position);
 
