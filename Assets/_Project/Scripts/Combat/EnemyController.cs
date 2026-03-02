@@ -50,7 +50,7 @@ public class EnemyController : MonoBehaviour
             home = self.coord;
             isSetHome = true;
         }
-
+       
         CombatUnit target = FindNearest(playerUnits);
         if (target == null || target.isDead) yield break;
 
@@ -58,7 +58,7 @@ public class EnemyController : MonoBehaviour
         int distToTarget = GridPath.Manhattan(self.coord, target.coord);
 
         // If the target is within attack range, attack it and end turn
-        if (distToTarget <= self.UnitData.attackRange)
+        if (distToTarget <= self.UnitData.attackRange && self.isAggressive)
         {
             CombatAction.Attack(gridManager, self, target);
             yield return new WaitForSeconds(actionDelay);
@@ -66,7 +66,7 @@ public class EnemyController : MonoBehaviour
         }
 
         // If the target is out of sight, patrol around home and end turn
-        if (distToTarget > sight)
+        if (distToTarget > sight || !self.isAggressive)
         {
             yield return Patrol();
             yield break;
@@ -78,7 +78,7 @@ public class EnemyController : MonoBehaviour
 
     int CalcSight(GameStateSO state)
     {
-        int baseSight = Mathf.Max(1, self.UnitData.sightRange);
+        int baseSight = Mathf.Max(0, self.UnitData.sightRange);
 
         int bonusSight = 0;
         if(state != null)

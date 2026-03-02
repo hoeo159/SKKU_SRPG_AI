@@ -13,6 +13,7 @@ public class CombatUnit : MonoBehaviour
     public Vector2Int coord { get; private set; }
 
     public bool isDead => HP <= 0;
+    public bool isAggressive = false;
 
     public void Init(UnitDataSO data, Vector2Int coord, Vector3 wPos)
     {
@@ -27,6 +28,11 @@ public class CombatUnit : MonoBehaviour
         unitData = udata;
         faction = fac;
 
+        if(UnitData.faction == Faction.Enemy)
+        {
+            isAggressive = true;
+        }
+
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null && unitData != null)
         {
@@ -35,9 +41,10 @@ public class CombatUnit : MonoBehaviour
 
         HP = (unitData != null) ? unitData.maxHealth : 1;
 
-        float h = (unitData != null) ? unitData.unitHeight : 0f;
-        coord = coor;
-        transform.position = wPos;
+        //float h = (unitData != null) ? unitData.unitHeight : 0f;
+        //coord = coor;
+        //transform.position = wPos;
+        SetCoord(coor, wPos);
     }
 
     public void SetCoord(Vector2Int coor, Vector3 wPos)
@@ -60,6 +67,11 @@ public class CombatUnit : MonoBehaviour
 
     public bool TakeDamage(int value)
     {
+        if (!isAggressive)
+        {
+            isAggressive = true;
+        }
+
         HP -= value;
         if(HP <= 0)
         {

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f22bc329b08066744ba23864e390a7c3, type: 3}
+  m_Name: Goblin
+  m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
+  unitName: Goblin
+  faction: 2
+  material: {fileID: 2100000, guid: 2e1e204940959e840a66093dc8090585, type: 2}
+  unitHeight: 1
+  maxHealth: 10
+  attack: 3
+  defense: 1
+  speed: 4
+  moveRange: 4
+  attackRange: 1
+  sightRange: 4
+  patrolRange: 2
+  aiMoveWeight: 0

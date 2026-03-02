@@ -1,8 +1,8 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 
 public class ExpedController : MonoBehaviour
 {
@@ -14,18 +14,17 @@ public class ExpedController : MonoBehaviour
 
     [Header("Raycast")]
     [SerializeField] private LayerMask tileMask;
+    [SerializeField] private LayerMask unitMask;
 
     [Header("World Turn")]
     [SerializeField] private WorldTurnRunner    worldTurnRunner;
     [SerializeField] private CombatUnit         playerUnit;
 
-    [Header("Test")]
-    private bool waitingRaiderDecision = false;
-    private Tile pendingRaiderTile = null;
-
     private Tile selectedTile;
     private Tile hoveredTile;
     private bool isMoving = false;
+    private bool moveThisTurn = false;
+    private bool actionThisTurn = false;
 
     private void Awake()
     {
@@ -48,18 +47,13 @@ public class ExpedController : MonoBehaviour
 
         if (startTile != null)
         {
-            player.Place(startCoord, startTile.transform.position);
+            //player.Place(startCoord, startTile.transform.position);
             startTile.Occupied = true;
         }
         else
         {
             Debug.LogError("[ExpedController] Start tile not found at coordinate: " + startCoord);
         }
-
-        //if (playerUnit != null && playerUnit.UnitData != null && startTile != null)
-        //{
-        //    playerUnit.Init(playerUnit.UnitData, startCoord, startTile.transform.position);
-        //}
 
         foreach(var unit in playerUnits)
         {
@@ -78,6 +72,8 @@ public class ExpedController : MonoBehaviour
             state.BeginExped(startCoord);
             gridManager.RefreshOpportunityCount(state);
         }
+
+        BeginPlayerTurn();
     }
 
     // Update is called once per frame
@@ -87,20 +83,14 @@ public class ExpedController : MonoBehaviour
         {
             return;
         }
-        if (isMoving) return;
 
-        if (waitingRaiderDecision)
+        if(Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && !isMoving)
         {
-            if (Keyboard.current != null && Keyboard.current.aKey.wasPressedThisFrame)
-            {
-                ResolveRaider(true);
-            }
-            else if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
-            {
-                ResolveRaider(false);
-            }
-            return; // 결정 전엔 이동/클릭 입력 막기
+            OnClick_EndTurn();
+            return;
         }
+
+        if (isMoving) return;
 
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
@@ -112,25 +102,68 @@ public class ExpedController : MonoBehaviour
 
         if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if(hoveredTile != null)
-            {
-                OnClickedTile(hoveredTile);
-            }
+            HandleLeftClick();
         }
     }
 
-    private void ResolveRaider(bool isAvoid)
+    void BeginPlayerTurn()
     {
-        var state = GameManager.gameManager?.state;
-        if (state == null || pendingRaiderTile == null) return;
+        moveThisTurn = false;
+        actionThisTurn = false;
+    }
 
-        if (isAvoid) state.avoidCount++;
-        else state.optionalKillCount++;
+    bool TryRaycast(out RaycastHit hit)
+    {
+        hit = default;
+        if (cam == null || Mouse.current == null) return false;
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        int mask = tileMask.value | unitMask.value;
+        return Physics.Raycast(ray, out hit, 100.0f, mask);
+    }
 
-        pendingRaiderTile.SetTileContent(TileContentType.None);
+    private static bool LayerInMask(int layer, LayerMask mask)
+    {
+        return (mask.value & (1 << layer)) != 0;
+    }
 
-        pendingRaiderTile = null;
-        waitingRaiderDecision = false;
+    private void HandleLeftClick()
+    {
+        if (!TryRaycast(out var hit)) return;
+
+        int layer = hit.collider.gameObject.layer;
+
+        // unit click 우선
+        if (LayerInMask(layer, unitMask))
+        {
+            var unit = hit.collider.GetComponentInParent<CombatUnit>();
+            if (unit != null && unit != playerUnit && !unit.isDead)
+            {
+                if (unit.UnitData.faction == Faction.Enemy)
+                {
+                    StartCoroutine(PlayerAttack(unit));
+                    return;
+                }
+                if (unit.UnitData.faction == Faction.Neutral)
+                {
+                    if(GridPath.Manhattan(playerUnit.coord, unit.coord) == 1)
+                    {
+                        DoTalk(unit.UnitData.unitName);
+                    }
+                    return;
+                }
+            }
+            return;
+        }
+
+        if (LayerInMask(layer, tileMask))
+        {
+            var tile = hit.collider.GetComponentInParent<Tile>();
+            if (tile != null)
+            {
+                OnClickedTile(tile);
+            }
+            return;
+        }
     }
 
     void ClearHover()
@@ -196,6 +229,82 @@ public class ExpedController : MonoBehaviour
         return true;
     }
 
+    // space to wait and pass turn
+    IEnumerator EndPlayerTurn()
+    {
+        if(isMoving) yield break;
+        if(worldTurnRunner != null && worldTurnRunner.busy) yield break;
+
+        isMoving = true;
+        var state = GameManager.gameManager?.state;
+        if(state != null)
+        {
+            state.expeditionTurn++;
+            Debug.Log($"[Player End] Expedition turn: {state.expeditionTurn}");
+        }
+
+        if(worldTurnRunner != null)
+        {
+            yield return worldTurnRunner.RunWorldTurn();
+        }
+
+        BeginPlayerTurn();
+
+        isMoving = false;
+    }
+
+    IEnumerator PlayerAttack(CombatUnit target)
+    {
+        isMoving = true;
+
+        if (playerUnit == null || playerUnit.UnitData == null)
+        {
+            isMoving = false;
+            yield break;
+        }
+
+        if(target == null || target.isDead)
+        {
+            isMoving = false;
+            yield break;
+        }
+
+        int dist = GridPath.Manhattan(playerUnit.coord, target.coord);
+        int range = playerUnit.UnitData.attackRange;
+
+        if(dist > range)
+        {
+            Debug.Log("[ExpedController] Target out of range. Attack cancelled.");
+            isMoving = false;
+            yield break;
+        }
+
+        int dmg = playerUnit.DamageTo(target);
+        bool isKilled = target.TakeDamage(dmg);
+        actionThisTurn = true;
+        Debug.Log($"[Attack] {playerUnit.UnitData.unitName} attacked {target.UnitData.unitName} for {dmg} damage. Target HP: {target.HP}");
+    
+        var state = GameManager.gameManager?.state;
+
+        if(state != null)
+        {
+            if(isKilled)
+            {
+                state.optionalKillCount++;
+            }
+        }
+
+        if(isKilled)
+        {
+            Tile tile = gridManager.GetTile(target.coord);
+            if (tile != null) tile.Occupied = false;
+
+            target.gameObject.SetActive(false);
+        }
+
+        isMoving = false;
+    }
+
     void OnClickedTile(Tile tile)
     {
         //SelectAndHighlight(tile);
@@ -209,6 +318,17 @@ public class ExpedController : MonoBehaviour
         if(!adjacent)
         {
             Debug.Log("[ExpedController] too far");
+            return;
+        }
+
+        if(moveThisTurn)
+        {
+            Debug.Log("[ExpedController] already moved this turn");
+            return;
+        }
+        if(actionThisTurn)
+        {
+            Debug.Log("[ExpedController] already took action this turn");
             return;
         }
 
@@ -239,19 +359,11 @@ public class ExpedController : MonoBehaviour
         if (src != null) src.Occupied = false;
         dest.Occupied = true;
 
-        //Vector3 moveTargetPos = dest.transform.position;
-        //if (playerUnit != null && playerUnit.UnitData != null)
-        //{
-        //    moveTargetPos.y += playerUnit.UnitData.unitHeight;
-        //}
-
-
         yield return player.MoveTo(dest.Coord, dest.transform.position);
 
         var state = GameManager.gameManager?.state;
         if (state != null)
         {
-            state.expeditionTurn++;
             state.expeditionMoveCount++;
             Debug.Log("[ExpedController] Player moved to " + dest.Coord + ". Expedition turn: "
                 + state.expeditionTurn);
@@ -262,14 +374,28 @@ public class ExpedController : MonoBehaviour
             playerUnit.SyncCoord(dest.Coord);
         }
 
+        moveThisTurn = true;
         bool canRunWorldTurn = HandleEnterTile(dest);
 
-        if(canRunWorldTurn && worldTurnRunner != null)
-        {
-            yield return worldTurnRunner.RunWorldTurn();
-        }
-
         isMoving = false;
+    }
+
+    void DoTalk(string targetName)
+    {
+        var state = GameManager.gameManager?.state;
+        if(state != null)
+        {
+            state.talkCount++;
+            actionThisTurn = true;
+            Debug.Log($"[Talk] talked with {targetName}. talkCount={state.talkCount}");
+        }
+    }    
+
+    public void OnClick_EndTurn()
+    {
+        if(isMoving) return;
+        if(worldTurnRunner != null && worldTurnRunner.busy) return;
+        StartCoroutine(EndPlayerTurn());
     }
 
     bool HandleEnterTile(Tile tile)
@@ -283,13 +409,15 @@ public class ExpedController : MonoBehaviour
         {
             case TileContentType.Farming:
                 state.farmingCount++;
+                actionThisTurn = true;
                 Debug.Log($"[Farming] ({tile.Coord.x},{tile.Coord.y})  farmingCount={state.farmingCount}");
                 tile.SetTileContent(TileContentType.None); // allow only once per tile
                 return true;
 
             case TileContentType.NPC:
-                state.talkCount++;
-                Debug.Log($"[Talk] ({tile.Coord.x},{tile.Coord.y})  talkCount={state.talkCount}");
+                //state.talkCount++;
+                //actionThisTurn = true;
+                //Debug.Log($"[Talk] ({tile.Coord.x},{tile.Coord.y})  talkCount={state.talkCount}");
                 return true;
 
             case TileContentType.Goal:
@@ -298,12 +426,6 @@ public class ExpedController : MonoBehaviour
                 state.EndExped(tile.Coord, ExpedEndType.GoalReached);
                 GameManager.gameManager.LoadScene("Hub");
                 return false;
-
-            case TileContentType.Raider:
-                //waitingRaiderDecision = true;
-                //pendingRaiderTile = tile;
-                Debug.Log("[Raider] A=Avoid / F=Fight");
-                break;
 
             case TileContentType.Radiation:
                 state.radiationCount++;

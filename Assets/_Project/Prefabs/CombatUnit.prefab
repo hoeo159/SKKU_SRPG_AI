@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 5730165959936721245}
   - component: {fileID: 6220150453059384582}
   - component: {fileID: 9110074043599929386}
+  - component: {fileID: 3724488724306077809}
   m_Layer: 7
   m_Name: Unit
   m_TagString: Untagged
@@ -161,3 +162,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatUnit
   unitData: {fileID: 0}
   faction: 0
+--- !u!114 &3724488724306077809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923062663055361402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec938a64fb4ae34f830346026c87d43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  gridManager: {fileID: 0}
+  idleRate: 0.6
+  stepDuration: 0.05
+  actionDelay: 0.1
+  maxAggressiveSightBonus: 2
