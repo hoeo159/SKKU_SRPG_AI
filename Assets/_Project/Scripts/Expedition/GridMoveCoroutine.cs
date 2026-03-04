@@ -20,6 +20,7 @@ public class GridMoveCoroutine
 
         if (dst == null || dst.Occupied) yield break;
         dst.Occupied = true;
+        src.Occupied = false;
 
         float height = unit.UnitData.unitHeight;
         int len = path.Count;

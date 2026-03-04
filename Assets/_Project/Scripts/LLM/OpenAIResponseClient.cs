@@ -8,6 +8,7 @@ public class OpenAIResponseClient : MonoBehaviour
 {
     [Header("OpenAI API setting")]
     [SerializeField] private string     model = "gpt-4o-mini";
+    // model = "gpt-5-nano"; // for test, but it may not be released yet.
     [SerializeField] private float      temperature = 0.7f;
     [SerializeField] private bool       store = false;
 
@@ -101,6 +102,9 @@ public class OpenAIResponseClient : MonoBehaviour
         if(www.result != UnityWebRequest.Result.Success)
         {
             onError?.Invoke($"OpenAI error : {www.error}");
+            Debug.LogWarning($"[OpenAI] HTTP {www.responseCode} err={www.error}\n" +
+                 $"Retry-After={www.GetResponseHeader("Retry-After")}\n" +
+                 $"{www.downloadHandler.text}");
             yield break;
         }
 
