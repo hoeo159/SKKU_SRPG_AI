@@ -27,4 +27,15 @@ public class UnitDataSO : ScriptableObject
 
     [Header("AI Values")] // TBD
     public int aiMoveWeight = 0;
+
+    [Header("LLM Persona")]
+    public bool canTalk = false;
+    [Range(-100, 100)] public int affinityToPlayer = 0;
+
+    [TextArea(2, 10)]
+    public string personaSummary;
+    [TextArea(6, 10)]
+    public string personaSystemPrompt;
+    [TextArea(2, 10)]
+    public string personaConstraint;
 }

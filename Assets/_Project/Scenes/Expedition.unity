@@ -1163,7 +1163,7 @@ GameObject:
   - component: {fileID: 247157139}
   - component: {fileID: 247157140}
   m_Layer: 7
-  m_Name: Combat Unit
+  m_Name: Zombie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1201,6 +1201,8 @@ MonoBehaviour:
   unitData: {fileID: 11400000, guid: 1aad12b9d3db18e4b8d755726cac227c, type: 2}
   faction: 2
   isAggressive: 0
+  affinityToPlayer: 0
+  memorySummary: 
 --- !u!136 &247157141
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2492,6 +2494,8 @@ MonoBehaviour:
   unitData: {fileID: 11400000, guid: 5bb0815b2368e3a4f85988d0fe0350c5, type: 2}
   faction: 1
   isAggressive: 0
+  affinityToPlayer: 0
+  memorySummary: 
 --- !u!1 &1082890115
 GameObject:
   m_ObjectHideFlags: 0
@@ -5501,6 +5505,8 @@ MonoBehaviour:
   unitData: {fileID: 11400000, guid: f7419580ed7c5cd4ca510f5c8671e8dd, type: 2}
   faction: 3
   isAggressive: 0
+  affinityToPlayer: 0
+  memorySummary: 
 --- !u!114 &2114944236
 MonoBehaviour:
   m_ObjectHideFlags: 0

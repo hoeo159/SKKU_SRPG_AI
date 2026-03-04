@@ -14,6 +14,9 @@ public class CombatUnit : MonoBehaviour
 
     public bool isDead => HP <= 0;
     public bool isAggressive = false;
+    public int affinityToPlayer;
+    [TextArea(2, 10)]
+    public string memorySummary;
 
     public void Init(UnitDataSO data, Vector2Int coord, Vector3 wPos)
     {
@@ -40,6 +43,11 @@ public class CombatUnit : MonoBehaviour
         }
 
         HP = (unitData != null) ? unitData.maxHealth : 1;
+        affinityToPlayer = (unitData != null) ? unitData.affinityToPlayer : 0;
+        if(string.IsNullOrEmpty(memorySummary))
+        {
+            memorySummary = "";
+        }
 
         //float h = (unitData != null) ? unitData.unitHeight : 0f;
         //coord = coor;
