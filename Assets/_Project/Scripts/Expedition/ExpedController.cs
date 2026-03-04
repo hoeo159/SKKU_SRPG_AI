@@ -26,6 +26,10 @@ public class ExpedController : MonoBehaviour
     [SerializeField] private Vector2        actionMenuOffset = new Vector2(80f, 40f);
     [SerializeField] private bool           blockMoveWhileAction = true;
 
+    [Header("LLM")]
+    [SerializeField] private TalkDirector talkDirector;
+    private CombatUnit currentTalkTarget;
+
     private Tile selectedTile;
     private Tile hoveredTile;
     private bool isMoving = false;
@@ -58,6 +62,7 @@ public class ExpedController : MonoBehaviour
         {
             units = new List<CombatUnit>();
         }
+        if(talkDirector == null) talkDirector = FindFirstObjectByType<TalkDirector>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -543,9 +548,9 @@ public class ExpedController : MonoBehaviour
         isMoving = false;
     }
 
-    bool TryFindTalkTarget(out string name)
+    bool TryFindTalkTarget(out CombatUnit target)
     {
-        name = null;
+        target = null;
         if (playerUnit == null) return false;
 
         var units = FindObjectsByType<CombatUnit>(FindObjectsSortMode.None);
@@ -558,7 +563,7 @@ public class ExpedController : MonoBehaviour
             }
             if(GridPath.Manhattan(playerUnit.coord, unit.coord) == 1)
             {
-                name = unit.UnitData.unitName;
+                target = unit;
                 return true;
             }
         }
@@ -568,13 +573,17 @@ public class ExpedController : MonoBehaviour
     void StartTalk()
     {
         if (talkUI == null) return;
-        if(!TryFindTalkTarget(out string name))
+        if (talkDirector == null) return;
+
+        if(!TryFindTalkTarget(out var target))
         {
             Debug.Log("[ExpedController] No talk target found.");
             return;
         }
 
+        currentTalkTarget = target;
         actionThisTurn = true;
+        string name = target.UnitData.unitName;
 
         var state = GameManager.gameManager?.state;
         if(state != null)
@@ -585,29 +594,47 @@ public class ExpedController : MonoBehaviour
 
         CloseActionMenu();
 
-        talkUI.Open(name, userText => GenerateReply(name, userText),
-            onClose: () => {
+        talkUI.OpenAsync(name,
+            userSend: (userText) =>
+            {
+                StartCoroutine(Coroutine_SendTalk(userText));
+            },
+            onClose: () => 
+            {
                 OpenActionMenu();
             }
         );
     }
 
-    string GenerateReply(string targetName, string userText)
+    IEnumerator Coroutine_SendTalk(string userText)
     {
         var state = GameManager.gameManager?.state;
-        if(state != null && state.radiation > 10)
+        var target = currentTalkTarget;
+
+        if(target == null || target.UnitData == null)
         {
-            return "The radiation is too high, I don't want to talk.";
-        }
-        if(userText.Contains("hello") || userText.Contains("hi"))
-        {
-            return $"Hello, I'm {targetName}. Nice to meet you.";
+            talkUI.AppendLine("[Error] Talk target is missing.");
+            talkUI.SetBusy(false);
+            yield break;
         }
 
-        return $"My name is {targetName}.";
+        yield return talkDirector.TalkToUnit(
+            target, state, userText,
+            onOk: (response) =>
+            {
+                talkUI.AppendNPC(response.reply);
+                talkUI.AppendLine($"[Affinity] {response.affinity_delta}  (Total: {target.affinityToPlayer})");
+                talkUI.SetBusy(false);
+            },
+            onError: (error) =>
+            {
+                talkUI.AppendLine("[Error] " + error);
+                talkUI.SetBusy(false);
+            }
+        );
     }
 
-        bool HandleEnterTile(Tile tile)
+    bool HandleEnterTile(Tile tile)
     {
         if (tile == null) return true;
         if (GameManager.gameManager == null || GameManager.gameManager.state == null) return true;

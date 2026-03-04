@@ -16,8 +16,10 @@ public class TalkUI : MonoBehaviour
     [SerializeField] private ScrollRect     scrollRect;
 
     private Func<string, string> replyFunc;
+    private Action<string> userSendAsync;
     private Action onClose;
     private string npcName = "NPC";
+    private bool isBusy = false;
 
     public bool isOpen => root != null && root.activeSelf;
 
@@ -30,6 +32,8 @@ public class TalkUI : MonoBehaviour
 
     private void Update()
     {
+        if(!isOpen || isBusy) return;
+
         var keyboard = Keyboard.current;
         if(keyboard == null) return;
 
@@ -43,16 +47,34 @@ public class TalkUI : MonoBehaviour
     {
         this.npcName = string.IsNullOrEmpty(npcName) ? "NPC" : npcName;
         this.replyFunc = replyFunc;
+        this.userSendAsync = null;
         this.onClose = onClose;
 
-        if(root != null) root.SetActive(true);
+        OpenAndAppend();
+    }
 
-        if(titleText != null) titleText.text = this.npcName;
-        if(historyText != null) historyText.text = "";
+    public void OpenAsync(string npcName, Action<string> userSend, Action onClose = null)
+    {
+        this.npcName = string.IsNullOrEmpty(npcName) ? "NPC" : npcName;
+        this.replyFunc = null;
+        this.userSendAsync = userSend;
+        this.onClose = onClose;
 
-        AppendLine($"{this.npcName}: Hello!");
+        OpenAndAppend();
+    }
 
-        if(inputField != null)
+    private void OpenAndAppend()
+    {
+        if (root != null) root.SetActive(true);
+
+        if (titleText != null) titleText.text = this.npcName;
+        if (historyText != null) historyText.text = "";
+
+        AppendLine($"{this.npcName}와 대화를 진행합니다.");
+
+        SetBusy(false);
+
+        if (inputField != null)
         {
             inputField.text = "";
             inputField.ActivateInputField();
@@ -74,8 +96,21 @@ public class TalkUI : MonoBehaviour
         }
     }
 
+    public void AppendNPC(string text)
+    {
+        AppendLine($"{npcName}: {text}");
+    }
+
+    public void SetBusy(bool busy)
+    {
+        this.isBusy = busy;
+        if(sendButton != null) sendButton.interactable = !busy;
+        if(inputField != null) inputField.interactable = !busy;
+    }
+
     public void OnClickSend()
     {
+        if (isBusy) return;
         if (inputField == null) return;
 
         string user = inputField.text;
@@ -84,17 +119,28 @@ public class TalkUI : MonoBehaviour
         inputField.text = "";
         AppendLine($"You: {user}");
 
-        string reply = (replyFunc != null) ? replyFunc.Invoke(user) : "???";
-        AppendLine($"{npcName}: {reply}");
+        if(replyFunc != null)
+        {
+            string reply = (replyFunc != null) ? replyFunc.Invoke(user) : "......";
+            AppendNPC(reply);
+            inputField.ActivateInputField();
+            inputField.Select();
+        }
+        if(userSendAsync != null)
+        {
+            SetBusy(true);
+            AppendNPC("......");
+            userSendAsync.Invoke(user);
+            return;
+        }
 
-        inputField.ActivateInputField();
-        inputField.Select();
     }
 
     public void OnClickClose()
     {
         if(root != null) root.SetActive(false);
         replyFunc = null;
+        userSendAsync = null;
 
         onClose?.Invoke();
         onClose = null;

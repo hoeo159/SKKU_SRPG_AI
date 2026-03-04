@@ -1048,6 +1048,70 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 102190184}
   m_CullTransparentMesh: 1
+--- !u!1 &110889684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 110889687}
+  - component: {fileID: 110889686}
+  - component: {fileID: 110889685}
+  m_Layer: 0
+  m_Name: LLM
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &110889685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110889684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b103ec5a4590124aa8820d4e7ae78de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OpenAIResponseClient
+  model: gpt-4o-mini
+  temperature: 0.7
+  store: 0
+  envKeyName: OPENAI_UNITY_KEY
+--- !u!114 &110889686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110889684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739b1041d55efd84fbaee96f1e4fd8f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TalkDirector
+  client: {fileID: 110889685}
+  maxReplyChars: 180
+  maxAffinityDelta: 10
+--- !u!4 &110889687
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110889684}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.82185, y: 0, z: 3.219}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &156605800
 GameObject:
   m_ObjectHideFlags: 0
@@ -2544,6 +2608,7 @@ MonoBehaviour:
   talkUI: {fileID: 156605804}
   actionMenuOffset: {x: -80, y: 40}
   blockMoveWhileAction: 1
+  talkDirector: {fileID: 110889686}
 --- !u!4 &1082890117
 Transform:
   m_ObjectHideFlags: 0
@@ -5637,3 +5702,4 @@ SceneRoots:
   - {fileID: 247157144}
   - {fileID: 2114944230}
   - {fileID: 1272149364}
+  - {fileID: 110889687}

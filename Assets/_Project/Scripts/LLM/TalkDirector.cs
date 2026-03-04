@@ -25,11 +25,11 @@ public class TalkDirector : MonoBehaviour
 
     public IEnumerator TalkToUnit(CombatUnit target, GameStateSO state, string userText,
         Action<TalkResult> onOk,
-        Action<string> onErr)
+        Action<string> onError)
     {
         if (target == null || target.UnitData == null)
         {
-            onErr?.Invoke("target or UnitData is null");
+            onError?.Invoke("target or UnitData is null");
             yield break;
         }
         
@@ -57,7 +57,7 @@ public class TalkDirector : MonoBehaviour
 
                 onOk?.Invoke(r);
             },
-            onError: onErr
+            onError: onError
         );
     }
 
