@@ -67,7 +67,6 @@ public static class GridPath
         path.Reverse();
         return path;
     }
-
     public static int Manhattan(Vector2Int src, Vector2Int dst)
     {
         return Mathf.Abs(src.x - dst.x) + Mathf.Abs(src.y - dst.y);

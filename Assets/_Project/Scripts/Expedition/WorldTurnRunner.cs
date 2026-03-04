@@ -48,15 +48,12 @@ public class WorldTurnRunner : MonoBehaviour
         }
 
         // npc turn
-        //if (isNeutral)
-        //{
-        //    NpcController[] npcs = FindObjectsByType<NpcController>(FindObjectsSortMode.None);
-        //    foreach (var npc in npcs)
-        //    {
-        //        if (npc == null) continue;
-        //        yield return npc.TakeTurn(state, playerUnits);
-        //    }
-        //}
+        NpcController[] npcs = FindObjectsByType<NpcController>(FindObjectsSortMode.None);
+        foreach (var npc in npcs)
+        {
+            if (npc == null) continue;
+            yield return npc.TakeTurn(state, playerUnits);
+        }
 
         busy = false;
     }

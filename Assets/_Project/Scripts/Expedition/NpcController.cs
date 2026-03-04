@@ -34,7 +34,8 @@ public class NpcController : MonoBehaviour
         if (gridManager == null) gridManager = FindFirstObjectByType<GridManager>();
     }
 
-    public IEnumerator TakeTurn(GameStateSO state, CombatUnit playerUnit)
+
+    public IEnumerator TakeTurn(GameStateSO state, List<CombatUnit> playerUnit)
     {
         if (self == null || self.isDead || gridManager == null) yield break;
         if (!isSetHome)
@@ -48,13 +49,16 @@ public class NpcController : MonoBehaviour
             yield break;
         }
 
-        if (playerUnit != null && !playerUnit.isDead)
+        foreach(var unit in playerUnit)
         {
-            int distToPlayer = GridPath.Manhattan(self.coord, playerUnit.coord);
-            if (distToPlayer <= interactionRange)
+            if (unit != null && !unit.isDead)
             {
-                yield return new WaitForSeconds(actionDelay);
-                yield break;
+                int distToPlayer = GridPath.Manhattan(self.coord, unit.coord);
+                if (distToPlayer <= interactionRange)
+                {
+                    yield return new WaitForSeconds(actionDelay);
+                    yield break;
+                }
             }
         }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f22bc329b08066744ba23864e390a7c3, type: 3}
   m_Name: Man_1
   m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
-  unitName: Man_1
+  unitName: "\uC9C0\uB098\uAC00\uB294 \uC0AC\uB78C"
   faction: 3
   material: {fileID: 2100000, guid: b9f042644a91bf64f875b2a3b25ef1c2, type: 2}
   unitHeight: 1
