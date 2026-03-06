@@ -415,7 +415,7 @@ public class ExpedController : MonoBehaviour
         moveParent.Clear();
 
         Vector2Int start = player.Coord;
-        int range = player.maxMoveDistance;
+        int range = playerUnit.UnitData.moveRange;
 
         var q = new Queue<Vector2Int>();
         var dist = new Dictionary<Vector2Int, int>();

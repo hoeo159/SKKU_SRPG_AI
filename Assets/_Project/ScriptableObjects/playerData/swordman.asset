@@ -20,8 +20,13 @@ MonoBehaviour:
   attack: 5
   defense: 1
   speed: 4
-  moveRange: 3
+  moveRange: 6
   attackRange: 1
   sightRange: 0
   patrolRange: 0
   aiMoveWeight: 0
+  canTalk: 0
+  affinityToPlayer: 0
+  personaSummary: 
+  personaSystemPrompt: 
+  personaConstraint: 

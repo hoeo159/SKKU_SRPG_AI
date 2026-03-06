@@ -8,7 +8,7 @@ public class TalkDirector : MonoBehaviour
 
     [Header("Reply Rules")]
     [SerializeField] private int maxReplyChars = 180;
-    [SerializeField] private int maxAffinityDelta = 10;
+    [SerializeField] private int maxAffinityDelta = 30;
 
     [Serializable]
     public class TalkResult

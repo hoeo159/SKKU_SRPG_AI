@@ -21,8 +21,8 @@ public static class CombatAction
 
         if (dst == null || dst.Occupied) yield break;
 
-        dst.Occupied = true;
         if(src != null) src.Occupied = false;
+        dst.Occupied = true;
 
         float height = unit.UnitData.unitHeight;
         int len = path.Count;

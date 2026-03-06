@@ -1,3 +1,4 @@
+using System.Buffers.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,9 +18,17 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Material   npcMat;
     [SerializeField] private Material   goalMat;
 
-    [Header("Prefabs and Parents")]
+    [Header("Tiles")]
     [SerializeField] private Tile       tilePrefab;
     [SerializeField] private Transform  tileParent;
+
+    [Header("Hazard Settings")]
+    [SerializeField] private EnemyController    enemyPrefab;
+    [SerializeField] private Transform          enemyParent;
+    [SerializeField] private int                baseEnemyCount = 1;
+    [SerializeField] private int                maxEnemyCount = 5;
+    [SerializeField] private int                threatPerExtraEnemy = 15;
+    [SerializeField] private int                minSpawnDistFromStart = 3;
 
     [Header("Debug Contents")]
     [SerializeField] private bool placeDebugContents = true;
@@ -65,11 +74,13 @@ public class GridManager : MonoBehaviour
         var state = GameManager.gameManager?.state;
         if (state == null) return;
 
-        int radCount = Mathf.Clamp(1 + state.radiation / 10, 0, 25);
-        int raiderCount = Mathf.Clamp(1 + (state.enemyAgressive - state.guardAlert) / 20, 0, 25);
+        int radCount = Mathf.Clamp(5 + state.radiation / 2, 0, 25);
 
+        //int raiderCount = Mathf.Clamp(1 + (state.enemyAgressive - state.guardAlert) / 20, 0, 25);
         //state.radiationOpportunityCount = radCount;
         //state.raiderOpportunityCount = raiderCount;
+        
+        int extraFarming = Mathf.Clamp(Mathf.Max(state.shelterComfort, state.merchantTrust) - 40, 0, 4);
 
         var visited = new HashSet<Vector2Int>();
         visited.Add(startCoord);
@@ -77,18 +88,77 @@ public class GridManager : MonoBehaviour
         visited.Add(npcCoord);
         visited.Add(goalCoord);
 
-        PlaceRandomTiles(TileContentType.Radiation, radCount, visited);
-        PlaceRandomTiles(TileContentType.Raider, raiderCount, visited);
+        PlaceRandomTiles(TileContentType.Radiation, radCount, visited, radiationMat);
+        //PlaceRandomTiles(TileContentType.Raider, raiderCount, visited);
+        PlaceRandomTiles(TileContentType.Farming, extraFarming, visited, farmingMat);
 
+        SpawnEnemies(state, visited);
         RefreshOpportunityCount(state);
     }
 
-    void PlaceRandomTiles(TileContentType type, int count, HashSet<Vector2Int> visited)
+    void SpawnEnemies(GameStateSO state, HashSet<Vector2Int> visited)
+    {
+        if (enemyPrefab == null || enemyParent == null )
+        {
+            Debug.LogError("[GridManager] Enemy prefab or parent is not assigned. Cannot spawn enemies.");
+            return;
+        }
+
+        int threat = Mathf.Max(state.enemyAgressive - state.guardAlert, 0);
+        int extra = Mathf.Clamp(threat / Mathf.Max(1, threatPerExtraEnemy), 0, maxEnemyCount - baseEnemyCount);
+        int count = Mathf.Clamp(baseEnemyCount + extra, 0, maxEnemyCount);
+
+        int placed = 0;
+        int limited = 0;
+        int maxAttempt = width * height * 10;
+        while (placed < count && limited < maxAttempt)
+        {
+            limited++;
+
+            int x = Random.Range(0, width);
+            int y = Random.Range(0, height);
+            Vector2Int coord = new Vector2Int(x, y);
+
+            if (visited.Contains(coord)) continue;
+
+            if (GridPath.Manhattan(coord, startCoord) < minSpawnDistFromStart) continue;
+
+            Tile tile = GetTile(coord);
+            if (tile == null) continue;
+            if (!tile.Walkable) continue;
+            if (tile.Occupied) continue;
+
+            // spawn
+            EnemyController enemy = Instantiate(enemyPrefab, enemyParent);
+            CombatUnit      combatUnit = enemy.GetComponent<CombatUnit>();
+            if (combatUnit != null && combatUnit.UnitData != null)
+            {
+                combatUnit.Init(combatUnit.UnitData, combatUnit.UnitData.faction, coord, tile.transform.position);
+            }
+            else if (combatUnit != null)
+            {
+                Debug.Log("[GridManager] Spawned enemy missing CombatUnit or UnitData. Initializing with default values.");
+                // 없으면 일단 sync
+                combatUnit.SyncCoord(coord);
+                enemy.transform.position = tile.transform.position;
+            }
+
+            tile.Occupied = true;
+            visited.Add(coord);
+            placed++;
+        }
+
+        state.raiderOpportunityCount = placed;
+
+    }
+
+    void PlaceRandomTiles(TileContentType type, int count, HashSet<Vector2Int> visited, Material mat)
     {
         int placed = 0;
         int limited = 0;
+        int maxAttempt = width * height * 10;
 
-        while(placed < count && limited <= 1000)
+        while(placed < count && limited <= maxAttempt)
         {
             limited++;
 
@@ -100,17 +170,13 @@ public class GridManager : MonoBehaviour
 
             Tile tile = GetTile(coord);
             if (tile == null) continue;
-            if(tile.tileContent != TileContentType.None) continue;
-
-            if(type == TileContentType.Radiation && radiationMat != null)
+            if (tile.tileContent != TileContentType.None)
             {
-                SetTileContent(coord, type, radiationMat);
-            }
-            else if(type == TileContentType.Raider && raiderMat != null)
-            {
-                SetTileContent(coord, type, raiderMat);
+                //visited.Add(coord);
+                continue;
             }
 
+            tile.SetTileContent(type, mat);
             visited.Add(coord);
             placed++;
         }
@@ -190,10 +256,9 @@ public class GridManager : MonoBehaviour
         if (state == null || tiles == null) return;
         int farmingOpp = 0;
         int talkOpp = 0;
-        int raiderOpp = 0;
         int radiationOpp = 0;
 
-        for(int y = 0; y < height; y++)
+        for (int y = 0; y < height; y++)
         {
             for(int x = 0; x < width; x++)
             {
@@ -207,9 +272,6 @@ public class GridManager : MonoBehaviour
                     case TileContentType.NPC:
                         talkOpp++;
                         break;
-                    case TileContentType.Raider:
-                        raiderOpp++;
-                        break;
                     case TileContentType.Radiation:
                         radiationOpp++;
                         break;
@@ -217,9 +279,18 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        int enemyOpp = 0;
+        var units = FindObjectsByType<CombatUnit>(FindObjectsSortMode.None);
+        foreach(var unit in units)
+        {
+            if (unit == null || unit.isDead) continue;
+            if (unit.Faction == Faction.Enemy)
+                enemyOpp++;
+        }
+
         state.farmingOpportunityCount = farmingOpp;
         state.talkOpportunityCount = talkOpp;
-        state.raiderOpportunityCount = raiderOpp;
+        state.raiderOpportunityCount = enemyOpp;
         state.radiationOpportunityCount = radiationOpp;
     }
 }

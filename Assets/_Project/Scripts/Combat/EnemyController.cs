@@ -54,6 +54,7 @@ public class EnemyController : MonoBehaviour
         CombatUnit target = FindNearest(playerUnits);
         if (target == null || target.isDead) yield break;
 
+        float idle = CalcIdleRate(state);
         int sight = CalcSight(state);
         int distToTarget = GridPath.Manhattan(self.coord, target.coord);
 
@@ -68,7 +69,7 @@ public class EnemyController : MonoBehaviour
         // If the target is out of sight, patrol around home and end turn
         if (distToTarget > sight || !self.isAggressive)
         {
-            yield return Patrol();
+            yield return Patrol(idle);
             yield break;
         }
 
@@ -108,15 +109,16 @@ public class EnemyController : MonoBehaviour
         return nearest;
     }
 
-    IEnumerator Patrol()
+    IEnumerator Patrol(float idle)
     {
-        if(Random.value < idleRate)
+        if(Random.value < idle)
         {
             yield return new WaitForSeconds(actionDelay);
             yield break; // idle
         }
 
         var candidates = new List<Vector2Int>();
+
         foreach(var dir in DIR4)
         {
             Vector2Int next = self.coord + dir;
@@ -142,6 +144,15 @@ public class EnemyController : MonoBehaviour
 
         yield return CombatAction.Move(gridManager, self, path, stepDuration);
         yield return new WaitForSeconds(actionDelay);
+    }
+
+    float CalcIdleRate(GameStateSO state)
+    {
+        float baseIdle = idleRate;
+        if(state == null) return baseIdle;
+
+        float tmp = Mathf.Clamp01(state.enemyAgressive / 100f);
+        return Mathf.Lerp(baseIdle, 0.1f, tmp);
     }
 
     IEnumerator ChaseUsingUtility(List<CombatUnit> playerUnits)

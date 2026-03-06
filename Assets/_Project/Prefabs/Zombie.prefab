@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4944377341254371922}
   m_Layer: 0
-  m_Name: CombatUnit
+  m_Name: Zombie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -160,8 +160,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fabde7bf951a25a448ea8dfb4e77ef51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatUnit
-  unitData: {fileID: 0}
-  faction: 0
+  unitData: {fileID: 11400000, guid: 1aad12b9d3db18e4b8d755726cac227c, type: 2}
+  faction: 2
+  isAggressive: 1
+  affinityToPlayer: 0
+  memorySummary: 
 --- !u!114 &3724488724306077809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   gridManager: {fileID: 0}
-  idleRate: 0.6
+  idleRate: 0.3
   stepDuration: 0.05
   actionDelay: 0.1
   maxAggressiveSightBonus: 2

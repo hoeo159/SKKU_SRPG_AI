@@ -6,6 +6,7 @@ public class ExpedPlayer : MonoBehaviour
     [SerializeField] private float  moveDuration = 0.1f;
     [SerializeField] private float  heightOffset = 1.0f;
     [SerializeField] public  int    maxMoveDistance = 1;
+    [SerializeField] public CombatUnit unit;
 
     public Vector2Int Coord { get; private set; }
 
