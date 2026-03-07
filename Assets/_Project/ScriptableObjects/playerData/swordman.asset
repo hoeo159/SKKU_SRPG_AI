@@ -21,7 +21,7 @@ MonoBehaviour:
   defense: 1
   speed: 4
   moveRange: 6
-  attackRange: 1
+  attackRange: 2
   sightRange: 0
   patrolRange: 0
   aiMoveWeight: 0

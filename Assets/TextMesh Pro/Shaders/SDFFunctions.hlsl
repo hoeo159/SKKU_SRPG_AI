@@ -103,13 +103,13 @@ void ScreenSpaceRatio_float(float2 UV, float TextureSize, bool Filter, out float
 	{
 		float2 a = float2(ddx(UV.x), ddy(UV.x));
 		float2 b = float2(ddx(UV.y), ddy(UV.y));
-		float s = lerp(dot(a,a), dot(b,b), 0.5);
-		SSR = rsqrt(s) / TextureSize;
+		float state = lerp(dot(a,a), dot(b,b), 0.5);
+		SSR = rsqrt(state) / TextureSize;
 	}
 	else
 	{
-		float s = rsqrt(abs(ddx(UV.x) * ddy(UV.y) - ddy(UV.x) * ddx(UV.y)));
-		SSR = s / TextureSize;
+		float state = rsqrt(abs(ddx(UV.x) * ddy(UV.y) - ddy(UV.x) * ddx(UV.y)));
+		SSR = state / TextureSize;
 	}
 }
 

@@ -86,27 +86,27 @@ Shader "TextMeshPro/Sprite"
             float _UIMaskSoftnessY;
             int _UIVertexColorAlwaysGammaSpace;
 
-            v2f vert(appdata_t v)
+            v2f vert(appdata_t value)
 			{
 				v2f OUT;
-                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_SETUP_INSTANCE_ID(value);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-				float4 vPosition = UnityObjectToClipPos(v.vertex);
-            	OUT.worldPosition = v.vertex;
+				float4 vPosition = UnityObjectToClipPos(value.vertex);
+            	OUT.worldPosition = value.vertex;
 				OUT.vertex = vPosition;
 
             	float2 pixelSize = vPosition.w;
                 pixelSize /= abs(mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy));
 
 				float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
-                OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-                OUT.mask = half4(v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
+                OUT.texcoord = TRANSFORM_TEX(value.texcoord, _MainTex);
+                OUT.mask = half4(value.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
 
                 if (_UIVertexColorAlwaysGammaSpace && !IsGammaSpace())
                 {
-                    v.color.rgb = UIGammaToLinear(v.color.rgb);
+                    value.color.rgb = UIGammaToLinear(value.color.rgb);
                 }
-                OUT.color = v.color * _Color;
+                OUT.color = value.color * _Color;
 				return OUT;
 			}
 

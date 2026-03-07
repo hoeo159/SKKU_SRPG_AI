@@ -43,14 +43,14 @@ public class ProfileCalculator
 
     public static int CLAMP10(float value) => Mathf.Clamp(Mathf.RoundToInt(value), -10, 10);
 
-    private static PlayerProfile DeltaProcess(BehaviorSummary s)
+    private static PlayerProfile DeltaProcess(BehaviorSummary state)
     {
-        float farming   = s.farmingPerOpp - 0.5f;
-        float talk      = s.talkPerOpp - 0.5f;
-        float kill      = s.killPerOpp - 0.5f;
-        float avoid     = s.avoidPerOpp - 0.5f;
-        float radiation = (s.radiationOpportunityCount > 0) ? s.radiationPerOpp - 0.5f : 0f;
-        float detour    = s.detourRate - 0.25f;
+        float farming   = state.farmingPerOpp - 0.5f;
+        float talk      = state.talkPerOpp - 0.5f;
+        float kill      = state.killPerOpp - 0.5f;
+        float avoid     = state.avoidPerOpp - 0.5f;
+        float radiation = (state.radiationOpportunityCount > 0) ? state.radiationPerOpp - 0.5f : 0f;
+        float detour    = state.detourRate - 0.25f;
 
         int dGreedy = CLAMP10(farming * 12f);
         int dSocial = CLAMP10(talk * 12f);
@@ -58,7 +58,7 @@ public class ProfileCalculator
         int dCurious = CLAMP10(detour * 12f + farming * 4f + talk * 4f);
         int dDiscipline = CLAMP10((-detour) * 12f);
 
-        if (s.endType == ExpedEndType.Abort) dDiscipline = Mathf.Clamp(dDiscipline - 5, -10, 10);
+        if (state.endType == ExpedEndType.Abort) dDiscipline = Mathf.Clamp(dDiscipline - 5, -10, 10);
 
         int dCruel = CLAMP10(kill * 14f);
         int dMercy = CLAMP10((avoid - kill) * 10f + talk * 6f);

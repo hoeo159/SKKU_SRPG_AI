@@ -1,32 +1,32 @@
-void VertShader(inout appdata_full v, out Input data)
+void VertShader(inout appdata_full value, out Input data)
 {
-	v.vertex.x += _VertexOffsetX;
-	v.vertex.y += _VertexOffsetY;
+	value.vertex.x += _VertexOffsetX;
+	value.vertex.y += _VertexOffsetY;
 
 	UNITY_INITIALIZE_OUTPUT(Input, data);
 
-	float bold = step(v.texcoord.w, 0);
+	float bold = step(value.texcoord.w, 0);
 
 	// Generate normal for backface
-	float3 view = ObjSpaceViewDir(v.vertex);
-	v.normal *= sign(dot(v.normal, view));
+	float3 view = ObjSpaceViewDir(value.vertex);
+	value.normal *= sign(dot(value.normal, view));
 
 #if USE_DERIVATIVE
 	data.param.y = 1;
 #else
-	float4 vert = v.vertex;
+	float4 vert = value.vertex;
 	float4 vPosition = UnityObjectToClipPos(vert);
 	float2 pixelSize = vPosition.w;
 
 	pixelSize /= float2(_ScaleX, _ScaleY) * mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy);
 	float scale = rsqrt(dot(pixelSize, pixelSize));
-	scale *= abs(v.texcoord.w) * _GradientScale * (_Sharpness + 1);
-	scale = lerp(scale * (1 - _PerspectiveFilter), scale, abs(dot(UnityObjectToWorldNormal(v.normal.xyz), normalize(WorldSpaceViewDir(vert)))));
+	scale *= abs(value.texcoord.w) * _GradientScale * (_Sharpness + 1);
+	scale = lerp(scale * (1 - _PerspectiveFilter), scale, abs(dot(UnityObjectToWorldNormal(value.normal.xyz), normalize(WorldSpaceViewDir(vert)))));
 	data.param.y = scale;
 #endif
 
 	data.param.x = (lerp(_WeightNormal, _WeightBold, bold) / 4.0 + _FaceDilate) * _ScaleRatioA * 0.5; //
-	data.viewDirEnv = mul((float3x3)_EnvMatrix, WorldSpaceViewDir(v.vertex));
+	data.viewDirEnv = mul((float3x3)_EnvMatrix, WorldSpaceViewDir(value.vertex));
 }
 
 void PixShader(Input input, inout SurfaceOutput o)

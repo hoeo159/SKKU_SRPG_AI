@@ -86,23 +86,23 @@ SubShader {
         uniform float		_UIMaskSoftnessY;
         uniform int _UIVertexColorAlwaysGammaSpace;
 
-		v2f vert (appdata_t v)
+		v2f vert (appdata_t value)
 		{
 			v2f OUT;
-			float4 vert = v.vertex;
+			float4 vert = value.vertex;
 			vert.x += _VertexOffsetX;
 			vert.y += _VertexOffsetY;
 
 			vert.xy += (vert.w * 0.5) / _ScreenParams.xy;
             if (_UIVertexColorAlwaysGammaSpace && !IsGammaSpace())
             {
-                v.color.rgb = UIGammaToLinear(v.color.rgb);
+                value.color.rgb = UIGammaToLinear(value.color.rgb);
             }
             OUT.vertex = UnityPixelSnap(UnityObjectToClipPos(vert));
-			OUT.color = v.color;
+			OUT.color = value.color;
 			OUT.color *= _Color;
 			OUT.color.rgb *= _DiffusePower;
-			OUT.texcoord0 = v.texcoord0;
+			OUT.texcoord0 = value.texcoord0;
 
 			float2 pixelSize = OUT.vertex.w;
 			//pixelSize /= abs(float2(_ScreenParams.x * UNITY_MATRIX_P[0][0], _ScreenParams.y * UNITY_MATRIX_P[1][1]));

@@ -87,9 +87,9 @@ SubShader{
         uniform float		_UIMaskSoftnessY;
         uniform int _UIVertexColorAlwaysGammaSpace;
 
-		v2f vert (appdata_t v)
+		v2f vert (appdata_t value)
 		{
-			float4 vert = v.vertex;
+			float4 vert = value.vertex;
 			vert.x += _VertexOffsetX;
 			vert.y += _VertexOffsetY;
 
@@ -99,16 +99,16 @@ SubShader{
 
             if (_UIVertexColorAlwaysGammaSpace && !IsGammaSpace())
             {
-                v.color.rgb = UIGammaToLinear(v.color.rgb);
+                value.color.rgb = UIGammaToLinear(value.color.rgb);
             }
-			fixed4 faceColor = v.color;
+			fixed4 faceColor = value.color;
 			faceColor *= _FaceColor;
 
 			v2f OUT;
 			OUT.vertex = vPosition;
 			OUT.color = faceColor;
-			OUT.texcoord0 = v.texcoord0;
-			OUT.texcoord1 = TRANSFORM_TEX(v.texcoord1, _FaceTex);
+			OUT.texcoord0 = value.texcoord0;
+			OUT.texcoord1 = TRANSFORM_TEX(value.texcoord1, _FaceTex);
 			float2 pixelSize = vPosition.w;
 			pixelSize /= abs(float2(_ScreenParams.x * UNITY_MATRIX_P[0][0], _ScreenParams.y * UNITY_MATRIX_P[1][1]));
 

@@ -113,12 +113,12 @@ SubShader {
 		float _FaceDilate;
 		float _ScaleRatioA;
 
-		v2f vert( appdata_base v )
+		v2f vert( appdata_base value )
 		{
 			v2f o;
 			TRANSFER_SHADOW_CASTER(o)
-			o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
-			o.uv2 = TRANSFORM_TEX(v.texcoord, _OutlineTex);
+			o.uv = TRANSFORM_TEX(value.texcoord, _MainTex);
+			o.uv2 = TRANSFORM_TEX(value.texcoord, _OutlineTex);
 			o.alphaClip = o.alphaClip = (1.0 - _OutlineWidth * _ScaleRatioA - _FaceDilate * _ScaleRatioA) / 2;
 			return o;
 		}

@@ -191,7 +191,7 @@ public class GridManager : MonoBehaviour
         }
         if(tileParent == null)
         {
-            Debug.LogError("[GridManager] Tiles parent is not assigned. Using GridManager's transform as parent.");
+            Debug.LogError("[GridManager] Tiles parent is not assigned. Using GridManager'state transform as parent.");
             tileParent = this.transform;
         }
 

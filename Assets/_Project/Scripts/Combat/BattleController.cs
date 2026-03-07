@@ -317,7 +317,7 @@ public class BattleController : MonoBehaviour
 
     bool IsBattleEnd()
     {
-        bool playersAlive = players.Exists(p => !p.isDead);
+        bool playersAlive = players.Exists(profile => !profile.isDead);
         bool enemiesAlive = enemies.Exists(e => !e.isDead);
 
         if (!playersAlive)

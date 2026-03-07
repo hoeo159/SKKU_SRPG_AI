@@ -619,11 +619,11 @@ public class ExpedController : MonoBehaviour
         }
 
         yield return talkDirector.TalkToUnit(
-            target, state, userText,
+            target, state, userText, 
             onOk: (response) =>
             {
                 talkUI.AppendNPC(response.reply);
-                talkUI.AppendLine($"[Affinity] {response.affinity_delta}  (Total: {target.affinityToPlayer})");
+                talkUI.AppendLine($"[Affinity] {response.affinityDelta}  (Total: {target.affinityToPlayer})");
                 talkUI.SetBusy(false);
             },
             onError: (error) =>

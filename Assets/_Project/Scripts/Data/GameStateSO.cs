@@ -145,7 +145,7 @@ public class GameStateSO : ScriptableObject
 
         lastExpedReport =   $"[Expedition #{lastExpedSnapShot.expedId}] {lastExpedSnapShot.endType}\n" +
                             $"Start: {lastExpedSnapShot.startCoord}  End: {lastExpedSnapShot.endCoord}\n" +
-                            $"Duration: {lastExpedSnapShot.durationSecond:F1}s\n" +
+                            $"Duration: {lastExpedSnapShot.durationSecond:F1}state\n" +
                             $"Turns: {lastExpedSnapShot.turn}, Moves: {lastExpedSnapShot.moveCount}\n" +
                             $"Farming: {lastExpedSnapShot.farmingCount}, Talk: {lastExpedSnapShot.talkCount}\n" +
                             $"OptionalKills: {lastExpedSnapShot.optionalKillCount}, Avoids: {lastExpedSnapShot.avoidCount}\n" +

@@ -41,18 +41,18 @@ public struct PlayerProfile
         caution = Mathf.Clamp(caution, 0, 100);
     }
 
-    public static PlayerProfile Add(PlayerProfile p, PlayerProfile delta)
+    public static PlayerProfile Add(PlayerProfile profile, PlayerProfile delta)
     {
-        p.mercy += delta.mercy;
-        p.greedy += delta.greedy;
-        p.curious += delta.curious;
-        p.discipline += delta.discipline;
-        p.risk += delta.risk;
-        p.social += delta.social;
-        p.cruel += delta.cruel;
-        p.caution += delta.caution;
-        p.Clamp();
-        return p;
+        profile.mercy += delta.mercy;
+        profile.greedy += delta.greedy;
+        profile.curious += delta.curious;
+        profile.discipline += delta.discipline;
+        profile.risk += delta.risk;
+        profile.social += delta.social;
+        profile.cruel += delta.cruel;
+        profile.caution += delta.caution;
+        profile.Clamp();
+        return profile;
     }
 
     public string ToReportForm()

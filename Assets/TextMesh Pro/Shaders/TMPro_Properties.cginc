@@ -3,51 +3,51 @@ uniform sampler2D	_FaceTex;					// Alpha : Signed Distance
 uniform float		_FaceUVSpeedX;
 uniform float		_FaceUVSpeedY;
 uniform fixed4		_FaceColor;					// RGBA : Color + Opacity
-uniform float		_FaceDilate;				// v[ 0, 1]
-uniform float		_OutlineSoftness;			// v[ 0, 1]
+uniform float		_FaceDilate;				// value[ 0, 1]
+uniform float		_OutlineSoftness;			// value[ 0, 1]
 
 uniform sampler2D	_OutlineTex;				// RGBA : Color + Opacity
 uniform float		_OutlineUVSpeedX;
 uniform float		_OutlineUVSpeedY;
 uniform fixed4		_OutlineColor;				// RGBA : Color + Opacity
-uniform float		_OutlineWidth;				// v[ 0, 1]
+uniform float		_OutlineWidth;				// value[ 0, 1]
 
-uniform float		_Bevel;						// v[ 0, 1]
-uniform float		_BevelOffset;				// v[-1, 1]
-uniform float		_BevelWidth;				// v[-1, 1]
-uniform float		_BevelClamp;				// v[ 0, 1]
-uniform float		_BevelRoundness;			// v[ 0, 1]
+uniform float		_Bevel;						// value[ 0, 1]
+uniform float		_BevelOffset;				// value[-1, 1]
+uniform float		_BevelWidth;				// value[-1, 1]
+uniform float		_BevelClamp;				// value[ 0, 1]
+uniform float		_BevelRoundness;			// value[ 0, 1]
 
 uniform sampler2D	_BumpMap;					// Normal map
-uniform float		_BumpOutline;				// v[ 0, 1]
-uniform float		_BumpFace;					// v[ 0, 1]
+uniform float		_BumpOutline;				// value[ 0, 1]
+uniform float		_BumpFace;					// value[ 0, 1]
 
 uniform samplerCUBE	_Cube;						// Cube / sphere map
 uniform fixed4 		_ReflectFaceColor;			// RGB intensity
 uniform fixed4		_ReflectOutlineColor;
-//uniform float		_EnvTiltX;					// v[-1, 1]
-//uniform float		_EnvTiltY;					// v[-1, 1]
+//uniform float		_EnvTiltX;					// value[-1, 1]
+//uniform float		_EnvTiltY;					// value[-1, 1]
 uniform float3      _EnvMatrixRotation;
 uniform float4x4	_EnvMatrix;
 
 uniform fixed4		_SpecularColor;				// RGB intensity
-uniform float		_LightAngle;				// v[ 0,Tau]
-uniform float		_SpecularPower;				// v[ 0, 1]
-uniform float		_Reflectivity;				// v[ 5, 15]
-uniform float		_Diffuse;					// v[ 0, 1]
-uniform float		_Ambient;					// v[ 0, 1]
+uniform float		_LightAngle;				// value[ 0,Tau]
+uniform float		_SpecularPower;				// value[ 0, 1]
+uniform float		_Reflectivity;				// value[ 5, 15]
+uniform float		_Diffuse;					// value[ 0, 1]
+uniform float		_Ambient;					// value[ 0, 1]
 
 uniform fixed4		_UnderlayColor;				// RGBA : Color + Opacity
-uniform float		_UnderlayOffsetX;			// v[-1, 1]
-uniform float		_UnderlayOffsetY;			// v[-1, 1]
-uniform float		_UnderlayDilate;			// v[-1, 1]
-uniform float		_UnderlaySoftness;			// v[ 0, 1]
+uniform float		_UnderlayOffsetX;			// value[-1, 1]
+uniform float		_UnderlayOffsetY;			// value[-1, 1]
+uniform float		_UnderlayDilate;			// value[-1, 1]
+uniform float		_UnderlaySoftness;			// value[ 0, 1]
 
 uniform fixed4 		_GlowColor;					// RGBA : Color + Intesity
-uniform float 		_GlowOffset;				// v[-1, 1]
-uniform float 		_GlowOuter;					// v[ 0, 1]
-uniform float 		_GlowInner;					// v[ 0, 1]
-uniform float 		_GlowPower;					// v[ 1, 1/(1+4*4)]
+uniform float 		_GlowOffset;				// value[-1, 1]
+uniform float 		_GlowOuter;					// value[ 0, 1]
+uniform float 		_GlowInner;					// value[ 0, 1]
+uniform float 		_GlowPower;					// value[ 1, 1/(1+4*4)]
 
 // API Editable properties
 uniform float 		_ShaderFlags;

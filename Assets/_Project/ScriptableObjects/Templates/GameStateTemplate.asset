@@ -14,6 +14,65 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameStateSO
   day: 1
   gold: 0
+  guardAlert: 50
+  merchantTrust: 50
+  enemyAgressive: 50
+  shelterComfort: 50
+  radiation: 50
+  lastEventGeneratedExpedId: 0
+  holdingEvent: {fileID: 0}
+  holdingEventDebug: 
+  expeditionTurn: 0
+  expeditionMoveCount: 0
   optionalKillCount: 0
   avoidCount: 0
-  harvestCount: 0
+  farmingCount: 0
+  talkCount: 0
+  radiationCount: 0
+  farmingOpportunityCount: 0
+  talkOpportunityCount: 0
+  raiderOpportunityCount: 0
+  radiationOpportunityCount: 0
+  expedId: 0
+  curExpedStartCoord: {x: 0, y: 0}
+  curExpedStartTime: 0
+  isExpedding: 0
+  lastExpedSnapShot:
+    expedId: 0
+    endType: 0
+    startCoord: {x: 0, y: 0}
+    endCoord: {x: 0, y: 0}
+    durationSecond: 0
+    turn: 0
+    moveCount: 0
+    farmingCount: 0
+    talkCount: 0
+    optionalKillCount: 0
+    avoidCount: 0
+    radiationCount: 0
+    farmingOpportunityCount: 0
+    talkOpportunityCount: 0
+    raiderOpportunityCount: 0
+    radiationOpportunityCount: 0
+  isInitPlayerProfile: 0
+  playerProfile:
+    mercy: 0
+    greedy: 0
+    curious: 0
+    discipline: 0
+    risk: 0
+    social: 0
+    cruel: 0
+    caution: 0
+  deltaProfile:
+    mercy: 0
+    greedy: 0
+    curious: 0
+    discipline: 0
+    risk: 0
+    social: 0
+    cruel: 0
+    caution: 0
+  lastExpedReport: 
+  lastProfileReport: 
+  lastBehaviorSummaryJson: 
