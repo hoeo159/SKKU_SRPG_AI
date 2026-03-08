@@ -16,7 +16,7 @@
   - `GameStateSO` 템플릿을 런타임에 `Instantiate`하여 안전하게 상태 유지
   - `GameManager`는 `DontDestroyOnLoad` 싱글톤으로 전체 흐름 관리
 
-- **AI/LLM 기반 대화 및 이벤트 결과 구조(진행 중)**
+- **AI/LLM 기반 대화 및 이벤트 결과 구조**
   - `TalkDirector`가 AI 응답을 받아 다음을 처리:
     - `reply` : 화면에 출력되는 대사/텍스트
     - `affinityDelta` : 호감도/관계 변화량
@@ -58,6 +58,7 @@
 
 ## API
 본 프로젝트는 LLM을 위한 외부 API를 사용할 수 있습니다.
+`OpenAIResponseClient`에서 환경 변수를 입력 받아 사용합니다.
 
 ---
 
@@ -68,4 +69,4 @@
 ---
 
 ## License
-- Mit Licensew
+- Mit License

@@ -8,11 +8,21 @@ public class HubUI : MonoBehaviour
     [SerializeField] private TMP_Text expedReportText;
     [SerializeField] private TMP_Text profileReprotText;
     [SerializeField] private TMP_Text worldParamText;
-    [SerializeField] private GameObject TestPanel;
+    [SerializeField] private GameObject debugPanel;
+    [SerializeField] private GameObject eventPanel;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if(debugPanel != null)
+        {
+            debugPanel.SetActive(false);
+        }
+        if(eventPanel != null)
+        {
+            eventPanel.SetActive(true);
+        }
+
         Refresh();
     }
 
@@ -48,6 +58,7 @@ public class HubUI : MonoBehaviour
 
     public void OnClick_OnOffDebug()
     {
-        TestPanel.SetActive(!TestPanel.activeSelf);
+        debugPanel.SetActive(!debugPanel.activeSelf);
+        eventPanel.SetActive(!eventPanel.activeSelf);
     }
 }
