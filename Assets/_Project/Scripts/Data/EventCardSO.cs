@@ -19,7 +19,7 @@ public struct EventEffect
 }
 
 [Serializable]
-public struct EventOption
+public class EventOption
 {
     [TextArea(1, 10)]
     public string           optionText;

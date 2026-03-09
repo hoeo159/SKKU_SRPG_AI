@@ -84,6 +84,10 @@ public class GameStateSO : ScriptableObject
     [TextArea(4, 12)]
     public string lastBehaviorSummaryJson;
 
+    [Header("Generated Hub Event")]
+    public string holdingEventJson;
+    public string holdingEventId;
+
     public void ClearExpeditionState()
     {
         expeditionTurn      = 0;

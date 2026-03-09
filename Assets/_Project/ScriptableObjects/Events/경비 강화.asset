@@ -25,7 +25,7 @@ MonoBehaviour:
   wCruel: 0
   wCaution: 0
   optionA:
-    optionText: "\uB1CC\uBB3C"
+    optionText: "\uACBD\uBE44 \uAC15\uD654 "
     optionValue: "10\uB9CC\uC6D0 \uC9C0\uD3D0\uC758 \uD544\uC694\uC131"
     effects:
     - type: 1
@@ -33,7 +33,7 @@ MonoBehaviour:
     - type: 0
       value: -10
   optionB:
-    optionText: "\uADFC\uCDE8"
+    optionText: "\uD734\uC2DD"
     optionValue: Zzz
     effects:
     - type: 1

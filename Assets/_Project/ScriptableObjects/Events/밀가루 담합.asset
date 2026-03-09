@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: "\uBC00\uAC00\uB8E8 \uB2F4\uD569"
   m_EditorClassIdentifier: Assembly-CSharp::EventCardSO
   id: merchant
-  title: "\uBC00\uAC00\uB8E8 \uB2F4\uD569"
-  description: "7\uAC1C\uC758 \uAE30\uC5C5\uC774 \uC18C\uAE08\uBE75\uC744 \uB9DB\uC788\uAC8C
-    \uBA39\uC74C"
+  title: "\uB192\uC544\uC9C4 \uBB3E\uC790 \uAC00"
+  description: "\uC0C1\uC778\uB4E4\uC774 \uB192\uC740 \uAC00\uACA9\uC744 \uC694\uAD6C\uD568 "
   baseWeight: 10
   wMercy: 0
   wGreedy: -6
@@ -32,7 +31,7 @@ MonoBehaviour:
     - type: 2
       value: 10
   optionB:
-    optionText: "990\uC6D0 \uC18C\uAE08\uBE75"
+    optionText: "\uACF5\uACA9\uC801\uC778 \uC2A4\uD0E0"
     optionValue: "\uD5C9"
     effects:
     - type: 0
