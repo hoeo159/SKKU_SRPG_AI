@@ -33,7 +33,7 @@ public class HubUI : MonoBehaviour
         radText.text = $"ÇöÀç ¿À¿°µµ : {state.radiation}";
         expedReportText.text = GameManager.gameManager.state?.lastExpedReport;
         profileReprotText.text = GameManager.gameManager.state?.lastProfileReport;
-        worldParamText.text = $"[World]\n" +
+        worldParamText.text = $"[World Parameter]\n" +
             $"GuardAlert: {state.guardAlert}\n" +
             $"MerchantTrust: {state.merchantTrust}\n" +
             $"EnemyAggressive: {state.enemyAgressive}\n" +

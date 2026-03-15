@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f22bc329b08066744ba23864e390a7c3, type: 3}
   m_Name: Zombie
   m_EditorClassIdentifier: Assembly-CSharp::UnitDataSO
-  unitName: "\uAC10\uC5F0\uB41C \uC778\uAC04"
+  unitName: "\uAC10\uC5FC\uB41C \uC778\uAC04"
   faction: 2
   material: {fileID: 2100000, guid: 804f7561a05afe746b32af5a43d6edc5, type: 2}
   unitHeight: 1

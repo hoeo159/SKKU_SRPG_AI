@@ -18,7 +18,7 @@ MonoBehaviour:
   merchantTrust: 50
   enemyAgressive: 50
   shelterComfort: 50
-  radiation: 80
+  radiation: 0
   lastEventGeneratedExpedId: 0
   holdingEvent: {fileID: 0}
   holdingEventDebug: 
@@ -76,3 +76,5 @@ MonoBehaviour:
   lastExpedReport: 
   lastProfileReport: 
   lastBehaviorSummaryJson: 
+  holdingEventJson: 
+  holdingEventId: 

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3a306901e883c64cbcc98030e25fe79, type: 3}
-  m_Name: "\uBC00\uAC00\uB8E8 \uB2F4\uD569"
+  m_Name: "\uBB3C\uAC00 \uC0C1\uC2B9"
   m_EditorClassIdentifier: Assembly-CSharp::EventCardSO
   id: merchant
   title: "\uB192\uC544\uC9C4 \uBB3E\uC790 \uAC00"
