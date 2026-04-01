@@ -48,7 +48,7 @@ public class HubDirectorRunner : MonoBehaviour
         var state = GameManager.gameManager?.state;
         if (state == null || state.holdingEvent == null || eventUI == null) yield break;
 
-        eventUI.Loading("�̺�Ʈ ���� �ߡ�");
+        eventUI.Loading("�̺�Ʈ ���� �ߡ�");
 
         if (!forceRegnerateText &&
             !string.IsNullOrEmpty(state.holdingEventJson) &&
@@ -62,7 +62,7 @@ public class HubDirectorRunner : MonoBehaviour
             }
         }
 
-        // LLM ����
+        // LLM ����
         if (eventGenerator == null)
         {
             eventUI.Open(HubEventGenerator.MakeFallback("No eventGenerator"), ChooseA, ChooseB);
@@ -87,22 +87,47 @@ public class HubDirectorRunner : MonoBehaviour
         eventUI.Open(result, ChooseA, ChooseB);
     }
 
-    void ChooseA() => ApplyAndClose(0);
-    void ChooseB() => ApplyAndClose(1);
+    void ChooseA() => ApplyAndShowResult(0);
+    void ChooseB() => ApplyAndShowResult(1);
 
-    void ApplyAndClose(int idx)
+    void ApplyAndShowResult(int idx)
     {
         var state = GameManager.gameManager?.state;
         if (state == null || state.holdingEvent == null) return;
 
-        Debug.Log($"Option {(idx == 0 ? "A" : "B")} chosen for event {state.holdingEvent.id}");
         EventOption opt = (idx == 0) ? state.holdingEvent.optionA : state.holdingEvent.optionB;
+
+        string resultText = BuildResultText(opt);
         EventApplier.ApplyOption(state, opt);
 
         state.holdingEvent = null;
         state.holdingEventJson = "";
         state.holdingEventId = "";
 
-        if (eventUI != null) eventUI.Close();
+        if (eventUI != null) eventUI.ShowResult(resultText);
+    }
+
+    static string BuildResultText(EventOption opt)
+    {
+        if (opt == null || opt.effects == null || opt.effects.Length == 0)
+            return "변화 없음";
+
+        var sb = new System.Text.StringBuilder();
+        foreach (var e in opt.effects)
+        {
+            string label = e.type switch
+            {
+                EventEffectType.AddGold            => "금화",
+                EventEffectType.AddGuardAlert      => "경비 경계",
+                EventEffectType.AddMerchantTrust   => "상인 신뢰도",
+                EventEffectType.AddEnemyAgressive  => "적 공격성",
+                EventEffectType.AddShelterComfort  => "대피소 편의",
+                EventEffectType.AddRadiation       => "방사능",
+                _                                  => e.type.ToString()
+            };
+            string sign = e.value >= 0 ? "+" : "";
+            sb.AppendLine($"{label} {sign}{e.value}");
+        }
+        return sb.ToString().TrimEnd();
     }
 }

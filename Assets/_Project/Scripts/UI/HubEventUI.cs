@@ -32,10 +32,10 @@ public class HubEventUI : MonoBehaviour
     public void Loading(string message)
     {
         if (root != null) root.SetActive(true);
-        if (titleText != null) titleText.text = "Á¦¸ñ Áþ´Â Áß...";
+        if (titleText != null) titleText.text = "ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½...";
         if (descText != null) descText.text = message;
-        if (optionAText != null) optionAText.text = "Èì...";
-        if (optionBText != null) optionBText.text = "Àá½Ã¸¸...";
+        if (optionAText != null) optionAText.text = "ï¿½ï¿½...";
+        if (optionBText != null) optionBText.text = "ï¿½ï¿½Ã¸ï¿½...";
 
         SetButton(false);
 
@@ -58,6 +58,15 @@ public class HubEventUI : MonoBehaviour
         SetButton(true);
     }
     
+    public void ShowResult(string resultText)
+    {
+        onChooseA = null;
+        onChooseB = null;
+
+        SetButton(false);
+        if (descText != null) descText.text = resultText;
+    }
+
     public void Close()
     {
         onChooseA = null;

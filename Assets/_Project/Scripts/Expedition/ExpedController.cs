@@ -28,6 +28,10 @@ public class ExpedController : MonoBehaviour
 
     [Header("LLM")]
     [SerializeField] private TalkDirector talkDirector;
+
+    [Header("Return UI")]
+    [SerializeField] private ExpeditionReturnUI returnUI;
+
     private CombatUnit currentTalkTarget;
 
     private Tile selectedTile;
@@ -63,6 +67,7 @@ public class ExpedController : MonoBehaviour
             units = new List<CombatUnit>();
         }
         if(talkDirector == null) talkDirector = FindFirstObjectByType<TalkDirector>();
+        if(returnUI == null) returnUI = FindFirstObjectByType<ExpeditionReturnUI>(FindObjectsInactive.Include);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -660,8 +665,7 @@ public class ExpedController : MonoBehaviour
                 Debug.Log($"[Goal] ({tile.Coord.x},{tile.Coord.y})  Expedition Completed in {state.expeditionTurn} turns!");
                 state.day++;
                 state.EndExped(tile.Coord, ExpedEndType.GoalReached);
-                GameManager.gameManager.TriggerPreGenerate();
-                GameManager.gameManager.LoadScene("Hub");
+                returnUI?.ShowSummary(state, ExpedEndType.GoalReached);
                 return false;
 
             case TileContentType.Radiation:

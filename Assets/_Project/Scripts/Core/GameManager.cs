@@ -73,11 +73,11 @@ public class GameManager : MonoBehaviour
             {
                 s.holdingEventJson = JsonUtility.ToJson(data);
                 s.holdingEventId   = card.id;
-                Debug.Log("[GameManager] Pre-generation complete: " + card.id);
+                Debug.Log("[GameManager] Pre generation complete: " + card.id);
             },
             onError: (e) =>
             {
-                Debug.LogWarning("[GameManager] Pre-generation failed: " + e);
+                Debug.LogWarning("[GameManager] Pre generation failed: " + e);
             }
         );
     }
