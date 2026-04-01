@@ -104,6 +104,8 @@ public class HubDirectorRunner : MonoBehaviour
         state.holdingEventJson = "";
         state.holdingEventId = "";
 
+        FindFirstObjectByType<HubUI>()?.Refresh();
+
         if (eventUI != null) eventUI.ShowResult(resultText);
     }
 
