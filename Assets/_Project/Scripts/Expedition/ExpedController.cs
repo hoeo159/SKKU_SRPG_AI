@@ -660,6 +660,7 @@ public class ExpedController : MonoBehaviour
                 Debug.Log($"[Goal] ({tile.Coord.x},{tile.Coord.y})  Expedition Completed in {state.expeditionTurn} turns!");
                 state.day++;
                 state.EndExped(tile.Coord, ExpedEndType.GoalReached);
+                GameManager.gameManager.TriggerPreGenerate();
                 GameManager.gameManager.LoadScene("Hub");
                 return false;
 

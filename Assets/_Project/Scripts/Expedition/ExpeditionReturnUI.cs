@@ -14,6 +14,7 @@ public class ExpeditionReturnUI : MonoBehaviour
             state.EndExped(endCoord, ExpedEndType.NormalReturn);
         }
 
+        GameManager.gameManager?.TriggerPreGenerate();
         GameManager.gameManager.LoadScene("Hub");
     }
 }

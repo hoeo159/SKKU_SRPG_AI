@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6606842170450525672}
   - component: {fileID: 3790905036586210344}
+  - component: {fileID: -6448922666960334878}
+  - component: {fileID: 7720927256705420287}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,3 +47,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   gameStateSO: {fileID: 11400000, guid: a18696d4ef828804ba24143bb7351136, type: 2}
+  eventPool:
+  - {fileID: 11400000, guid: 5ea42b78a1497174687a39d3ebccd738, type: 2}
+  - {fileID: 11400000, guid: 3a625cc18dfff4e4285b260bedfb2fe7, type: 2}
+  - {fileID: 11400000, guid: f1144a93cd0090040b42c7fab605c8c6, type: 2}
+  preGenEventGenerator: {fileID: 0}
+--- !u!114 &-6448922666960334878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4103783916136256909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc240e561d88edc4ebf8c419203554d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HubEventGenerator
+  client: {fileID: 0}
+  maxTitleLength: 20
+  maxDescLength: 300
+  maxOptionLength: 20
+--- !u!114 &7720927256705420287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4103783916136256909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b103ec5a4590124aa8820d4e7ae78de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OpenAIResponseClient
+  model: gpt-4o-mini
+  temperature: 0.7
+  store: 0
+  maxOutputTokens: 400
+  envKeyName: 
+  fallbackApiKey: 

@@ -71,6 +71,9 @@ crashlytics-build.properties
 [Aa]ssets/[Ss]treamingAssets/aa.meta
 [Aa]ssets/[Ss]treamingAssets/aa/*
 
+# Claude Code
+CLAUDE.md
+
 # OS Generated Files
 .DS_Store
 .DS_Store?
