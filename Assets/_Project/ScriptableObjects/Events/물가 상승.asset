@@ -30,6 +30,8 @@ MonoBehaviour:
     effects:
     - type: 2
       value: 10
+    - type: 0
+      value: -5
   optionB:
     optionText: "\uACF5\uACA9\uC801\uC778 \uC2A4\uD0E0"
     optionValue: "\uD5C9"

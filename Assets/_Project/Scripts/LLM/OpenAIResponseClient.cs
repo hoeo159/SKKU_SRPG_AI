@@ -13,8 +13,8 @@ public class OpenAIResponseClient : MonoBehaviour
     [SerializeField] private bool       store = false;
     [SerializeField] private int        maxOutputTokens = 400;
 
-    //[SerializeField] private string     envKeyName = "OPENAI_UNITY_KEY";
-    [SerializeField] private string     envKeyName = null;
+    [SerializeField] private string     envKeyName = "OPENAI_UNITY_KEY";
+    //[SerializeField] private string     envKeyName = null;
     [SerializeField] private string     fallbackApiKey = ""; // 데모용 임시 키
 
     private const string URL = "https://api.openai.com/v1/responses";

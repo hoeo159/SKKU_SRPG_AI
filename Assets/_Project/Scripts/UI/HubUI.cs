@@ -61,4 +61,8 @@ public class HubUI : MonoBehaviour
         debugPanel.SetActive(!debugPanel.activeSelf);
         eventPanel.SetActive(!eventPanel.activeSelf);
     }
+    public void OnClick_Quit()
+    {
+        Application.Quit();
+    }
 }
