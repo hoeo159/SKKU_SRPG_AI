@@ -11,8 +11,11 @@ public class OpenAIResponseClient : MonoBehaviour
     // model = "gpt-5-nano"; // for test, but it may not be released yet.
     [SerializeField] private float      temperature = 0.7f;
     [SerializeField] private bool       store = false;
+    [SerializeField] private int        maxOutputTokens = 400;
 
-    [SerializeField] private string     envKeyName = "OPENAI_UNITY_KEY";
+    //[SerializeField] private string     envKeyName = "OPENAI_UNITY_KEY";
+    [SerializeField] private string     envKeyName = null;
+    [SerializeField] private string     fallbackApiKey = ""; // 데모용 임시 키
 
     private const string URL = "https://api.openai.com/v1/responses";
 
@@ -23,6 +26,7 @@ public class OpenAIResponseClient : MonoBehaviour
         public float temperature;
         public bool store;
         public TextConfig text;
+        public int max_output_tokens;
     }
 
     [Serializable] class InputMsg
@@ -68,6 +72,8 @@ public class OpenAIResponseClient : MonoBehaviour
     {
         string apiKey = Environment.GetEnvironmentVariable(envKeyName);
         if (string.IsNullOrEmpty(apiKey))
+            apiKey = fallbackApiKey;
+        if (string.IsNullOrEmpty(apiKey))
         {
             onError?.Invoke($"API key env var : {envKeyName}");
             yield break;
@@ -84,6 +90,7 @@ public class OpenAIResponseClient : MonoBehaviour
             },
             temperature = temperature,
             store = store,
+            max_output_tokens = maxOutputTokens,
             text = new TextConfig
             {
                 format = new Format { type = "json_object" }
