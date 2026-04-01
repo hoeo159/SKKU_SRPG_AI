@@ -48,7 +48,7 @@ public class HubDirectorRunner : MonoBehaviour
         var state = GameManager.gameManager?.state;
         if (state == null || state.holdingEvent == null || eventUI == null) yield break;
 
-        eventUI.Loading("�̺�Ʈ ���� �ߡ�");
+        eventUI.Loading("사건 파일을 정리하는 중...");
 
         if (!forceRegnerateText &&
             !string.IsNullOrEmpty(state.holdingEventJson) &&

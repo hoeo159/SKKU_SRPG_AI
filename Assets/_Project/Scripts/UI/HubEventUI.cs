@@ -32,10 +32,10 @@ public class HubEventUI : MonoBehaviour
     public void Loading(string message)
     {
         if (root != null) root.SetActive(true);
-        if (titleText != null) titleText.text = "����� �߻��ϴ� ��...";
+        if (titleText != null) titleText.text = "이슈를 정리하는 중입니다.";
         if (descText != null) descText.text = message;
-        if (optionAText != null) optionAText.text = "��...";
-        if (optionBText != null) optionBText.text = "��ø�...";
+        if (optionAText != null) optionAText.text = "흠....";
+        if (optionBText != null) optionBText.text = "타이핑 하는 중...";
 
         SetButton(false);
 
