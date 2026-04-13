@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "GameStateTemplate", menuName = "Scriptable Objects/GameState")]
 public class GameStateSO : ScriptableObject
@@ -88,6 +89,10 @@ public class GameStateSO : ScriptableObject
     public string holdingEventJson;
     public string holdingEventId;
 
+    [Header("Event Cooldown")]
+    public int eventCooldownSize = 3;
+    public List<string> recentEventIds = new List<string>();
+
     public void ClearExpeditionState()
     {
         expeditionTurn      = 0;
@@ -149,7 +154,7 @@ public class GameStateSO : ScriptableObject
 
         lastExpedReport =   $"[Expedition #{lastExpedSnapShot.expedId}] {lastExpedSnapShot.endType}\n" +
                             $"Start: {lastExpedSnapShot.startCoord}  End: {lastExpedSnapShot.endCoord}\n" +
-                            $"Duration: {lastExpedSnapShot.durationSecond:F1}state\n" +
+                            $"Duration: {lastExpedSnapShot.durationSecond:F1} seconds\n" +
                             $"Turns: {lastExpedSnapShot.turn}, Moves: {lastExpedSnapShot.moveCount}\n" +
                             $"Farming: {lastExpedSnapShot.farmingCount}, Talk: {lastExpedSnapShot.talkCount}\n" +
                             $"OptionalKills: {lastExpedSnapShot.optionalKillCount}, Avoids: {lastExpedSnapShot.avoidCount}\n" +
@@ -161,5 +166,14 @@ public class GameStateSO : ScriptableObject
                             $"RadiationOpp: {lastExpedSnapShot.radiationOpportunityCount}\n";
 
         ProfileCalculator.ApplyFromExpedition(this);
+    }
+
+    public void AddEventCooldown(string eventId)
+    {
+        recentEventIds.Add(eventId);
+        if(recentEventIds.Count > eventCooldownSize)
+        {
+            recentEventIds.RemoveAt(0);
+        }
     }
 }

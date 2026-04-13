@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -18,20 +19,34 @@ public static class EventDirector
 
         var profile = state.playerProfile;
 
-        float bestScore = float.NegativeInfinity;
-        EventCardSO bestEvent = null;
-
         var EventDebug = new StringBuilder();
         EventDebug.AppendLine("[EventDirector Debug]");
         EventDebug.AppendLine($"Profile: mercy={profile.mercy}, greedy={profile.greedy}, " +
             $"curious={profile.curious}, disc={profile.discipline}, risk={profile.risk}, " +
             $"social={profile.social}, cruel={profile.cruel}, caution={profile.caution}");
+        EventDebug.AppendLine($"Cooldown: [{string.Join(", ", state.recentEventIds)}]");
 
-        foreach (var eventCard in eventPool)
+        var candidates = new List<EventCardSO>();
+        foreach (var e in eventPool)
         {
-            if (eventCard == null) continue;
+            if (e != null && !state.recentEventIds.Contains(e.id))
+                candidates.Add(e);
+        }
 
-            float score = eventCard.baseWeight + 
+        if (candidates.Count == 0)
+        {
+            EventDebug.AppendLine("All events on cooldown, resetting cooldown.");
+            state.recentEventIds.Clear();
+            foreach (var e in eventPool)
+                if (e != null) candidates.Add(e);
+        }
+
+        float bestScore = float.NegativeInfinity;
+        EventCardSO bestEvent = null;
+
+        foreach (var eventCard in candidates)
+        {
+            float score = eventCard.baseWeight +
                 eventCard.wMercy * normalize(profile.mercy) +
                 eventCard.wGreedy * normalize(profile.greedy) +
                 eventCard.wCurious * normalize(profile.curious) +
@@ -53,6 +68,9 @@ public static class EventDirector
         EventDebug.AppendLine();
         EventDebug.AppendLine($"Picked: {(bestEvent != null ? bestEvent.id : "null")}  score={bestScore:F2}");
 
-        return(bestEvent, EventDebug.ToString());
+        if (bestEvent != null)
+            state.AddEventCooldown(bestEvent.id);
+
+        return (bestEvent, EventDebug.ToString());
     }
 }
