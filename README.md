@@ -105,11 +105,15 @@
 환경 변수 또는 별도 설정 파일을 사용하세요.
 
 ---
+## 시연 예시
 
+---
 ## Credits
 - Developer: hoeo159 (Minho Baek)
 - Project: SKKU Graduation Project (Unity SRPG + AI)
-
+![[스크린샷 2026-03-10 071048.png]]
+![[우호도 감소.png]]
+![[스크린샷 2026-03-10 081801.png]]
 ---
 
 ## License
