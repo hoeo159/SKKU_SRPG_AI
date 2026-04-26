@@ -78,3 +78,5 @@ MonoBehaviour:
   lastBehaviorSummaryJson: 
   holdingEventJson: 
   holdingEventId: 
+  eventCooldownSize: 3
+  recentEventIds: []

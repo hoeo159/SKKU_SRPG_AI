@@ -6673,6 +6673,10 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1479299114975576320, guid: 2c646158429fa8f41a28561c3d695210, type: 3}
+      propertyPath: baseEnemyCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1479299114975576320, guid: 2c646158429fa8f41a28561c3d695210, type: 3}
       propertyPath: farmingCoord.x
       value: 4
       objectReference: {fileID: 0}

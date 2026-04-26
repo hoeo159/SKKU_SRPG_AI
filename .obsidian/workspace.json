@@ -20,6 +20,18 @@
               "icon": "lucide-file",
               "title": "README"
             }
+          },
+          {
+            "id": "c443d74355b1347a",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "images/스크린샷 2026-03-10 071048.png"
+              },
+              "icon": "lucide-image",
+              "title": "스크린샷 2026-03-10 071048"
+            }
           }
         ]
       }
@@ -185,12 +197,13 @@
   },
   "active": "218d92ef278c2433",
   "lastOpenFiles": [
-    "images/스크린샷 2026-03-10 081801.png",
     "CLAUDE.md",
-    "images/스크린샷 2026-03-10 071048.png",
     "README.md",
+    "images/스크린샷 2026-03-10 081801.png",
+    "images/스크린샷 2026-03-10 071048.png",
+    "images/우호도 감소.png",
+    "images/플레이 화면.png",
     "images",
-    "무제.md",
-    "images/우호도 감소.png"
+    "무제.md"
   ]
 }
