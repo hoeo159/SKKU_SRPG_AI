@@ -299,6 +299,8 @@ MonoBehaviour:
   enemyData: {fileID: 11400000, guid: 1aad12b9d3db18e4b8d755726cac227c, type: 2}
   playerSpawnPos: {x: 1, y: 1}
   enemySpawnPos: {x: 8, y: 8}
+  stepDuration: 0.05
+  moveWait: 0.5
   cameraRig: {fileID: 1518619079}
   autoFocusOnTurnStart: 1
   snapFocus: 0

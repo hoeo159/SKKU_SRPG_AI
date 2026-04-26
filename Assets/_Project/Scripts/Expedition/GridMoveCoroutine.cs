@@ -25,11 +25,27 @@ public class GridMoveCoroutine
         float height = unit.UnitData.unitHeight;
         int len = path.Count;
 
+        Vector2Int prev = unit.coord;
+        unit.SetMoving(true);
+
         for (int i = srcIdx; i < len; i++)
         {
             Vector2Int coord = path[i];
             Tile tile = gridManager.GetTile(coord);
             if (tile == null) continue;
+
+            Vector2Int delta = coord - prev;
+            Vector3 lookDir;
+            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+            {
+                lookDir = new Vector3(delta.x, 0, 0);
+            }
+            else
+            {
+                lookDir = new Vector3(0, 0, delta.y);
+            }
+
+            unit.transform.rotation = Quaternion.LookRotation(lookDir);
 
             Vector3 startPos = unit.transform.position;
             Vector3 endPos = tile.transform.position;
@@ -48,6 +64,8 @@ public class GridMoveCoroutine
             }
 
             unit.SetCoord(coord, tile.transform.position);
+            prev = coord;
         }
+        unit.SetMoving(false);
     }
 }

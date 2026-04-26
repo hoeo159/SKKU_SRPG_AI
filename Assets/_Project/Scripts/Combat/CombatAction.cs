@@ -27,11 +27,27 @@ public static class CombatAction
         float height = unit.UnitData.unitHeight;
         int len = path.Count;
 
+        Vector2Int prev = unit.coord;
+        unit.SetMoving(true);
+
         for (int i = srcIdx; i < len; i++)
         {
             Vector2Int coord = path[i];
             Tile tile = gridManager.GetTile(coord);
             if (tile == null) continue;
+
+            Vector2Int delta = coord - prev;
+            Vector3 lookDir;
+            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+            {
+                lookDir = new Vector3(delta.x, 0, 0);
+            }
+            else
+            {
+                lookDir = new Vector3(0, 0, delta.y);
+            }
+
+            unit.transform.rotation = Quaternion.LookRotation(lookDir);
 
             Vector3 startPos = unit.transform.position;
             Vector3 endPos = tile.transform.position;
@@ -50,12 +66,19 @@ public static class CombatAction
             }
 
             unit.SetCoord(coord, tile.transform.position);
+
+            prev = coord;
         }
+        unit.SetMoving(false);
     }
 
     public static void Attack(GridManager gridManager, CombatUnit attacker, CombatUnit target)
     {
         if (attacker == null || target == null || attacker.isDead || target.isDead) return;
+
+        attacker.FaceTowards(target.coord);
+        target.FaceTowards(attacker.coord);
+        attacker.PlayAttack();
 
         int damage = attacker.DamageTo(target);
         bool isKilled = target.TakeDamage(damage);
@@ -72,7 +95,10 @@ public static class CombatAction
                     tile.Occupied = false;
                 }
             }
-            target.gameObject.SetActive(false);
+            //target.gameObject.SetActive(false);
+            target.DisableAfter(3.0f);
         }
     }
+
+
 }

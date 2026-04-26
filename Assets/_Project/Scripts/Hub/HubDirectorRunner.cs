@@ -62,7 +62,7 @@ public class HubDirectorRunner : MonoBehaviour
             }
         }
 
-        // LLM ����
+        // LLM
         if (eventGenerator == null)
         {
             eventUI.Open(HubEventGenerator.MakeFallback("No eventGenerator"), ChooseA, ChooseB);

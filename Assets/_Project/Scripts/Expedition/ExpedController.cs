@@ -23,7 +23,7 @@ public class ExpedController : MonoBehaviour
     [Header("UI")]
     [SerializeField] private ActionMenuUI   actionMenuUI;
     [SerializeField] private TalkUI         talkUI;
-    [SerializeField] private Vector2        actionMenuOffset = new Vector2(80f, 40f);
+    [SerializeField] private Vector2        actionMenuOffset = new Vector2(200f, 40f);
     [SerializeField] private bool           blockMoveWhileAction = true;
 
     [Header("LLM")]
@@ -289,6 +289,11 @@ public class ExpedController : MonoBehaviour
             yield break;
         }
 
+        playerUnit.FaceTowards(target.coord);
+        target.FaceTowards(playerUnit.coord);
+        playerUnit.PlayAttack();
+        
+        
         int dmg = playerUnit.DamageTo(target);
         bool isKilled = target.TakeDamage(dmg);
         actionThisTurn = true;
@@ -309,7 +314,8 @@ public class ExpedController : MonoBehaviour
             Tile tile = gridManager.GetTile(target.coord);
             if (tile != null) tile.Occupied = false;
 
-            target.gameObject.SetActive(false);
+            //target.gameObject.SetActive(false);
+            target.DisableAfter(3.0f);
         }
 
         ExitAttackType();
@@ -529,15 +535,34 @@ public class ExpedController : MonoBehaviour
         if(srcTile != null) srcTile.Occupied = false;
         destTile.Occupied = true;
 
+        Vector2Int prev = src;
+        playerUnit.SetMoving(true);
+
         foreach(var coord in path)
         {
             Tile curTile = gridManager.GetTile(coord);
             if (curTile == null) continue;
 
-            yield return player.MoveTo(coord, curTile.transform.position);
-        }
+            Vector2Int delta = coord - prev;
+            Vector3 lookDir;
+            if(Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+            {
+                lookDir = new Vector3(delta.x, 0, 0);
+            }
+            else
+            {
+                lookDir = new Vector3(0, 0, delta.y);
+            }
 
-        if(playerUnit != null)
+            player.transform.rotation = Quaternion.LookRotation(lookDir);
+
+            yield return player.MoveTo(coord, curTile.transform.position);
+
+            prev = coord;
+        }
+        playerUnit.SetMoving(false);
+
+        if (playerUnit != null)
             playerUnit.SyncCoord(dst);
 
         moveThisTurn = true;
@@ -589,6 +614,9 @@ public class ExpedController : MonoBehaviour
         currentTalkTarget = target;
         actionThisTurn = true;
         string name = target.UnitData.unitName;
+
+        playerUnit.FaceTowards(target.coord);
+        target.FaceTowards(playerUnit.coord);
 
         var state = GameManager.gameManager?.state;
         if(state != null)

@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Collider))]
 public class CombatUnit : MonoBehaviour
 {
     [SerializeField] private UnitDataSO unitData;
     [SerializeField] private Faction faction;
+    [SerializeField] private Animator animator;
 
     public UnitDataSO UnitData => unitData;
     public Faction Faction => faction;
@@ -21,6 +23,11 @@ public class CombatUnit : MonoBehaviour
     public void Init(UnitDataSO data, Vector2Int coord, Vector3 wPos)
     {
         Init(data, data != null ? data.faction : Faction.Neutral, coord, wPos);
+    }
+
+    private void Awake()
+    {
+        if(animator == null) animator = GetComponentInChildren<Animator>();
     }
 
     public void Init(UnitDataSO udata, Faction fac, Vector2Int coor, Vector3 wPos)
@@ -84,13 +91,40 @@ public class CombatUnit : MonoBehaviour
         if(HP <= 0)
         {
             HP = 0;
+            PlayDeath();
             return true;
         }
+        PlayHit();
         return false;
+    }
+
+    public void SetMoving(bool b) { if (animator) animator.SetBool("isMoving", b); }
+    public void PlayAttack() { if (animator) animator.SetTrigger("Attack"); }
+    public void PlayHit() { if (animator) animator.SetTrigger("Hit"); }
+    public void PlayDeath() { if (animator) animator.SetTrigger("Death"); }
+
+    public void DisableAfter(float delay) { StartCoroutine(Co_DisableAfter(delay)); }
+    IEnumerator Co_DisableAfter(float t)
+    {
+        yield return new WaitForSeconds(t);
+        gameObject.SetActive(false);
     }
 
     public void SyncCoord(Vector2Int syncCoord)
     {
         coord = syncCoord;
+    }
+
+    public void FaceTowards(Vector2Int otherCoord)
+    {
+        Vector2Int delta = otherCoord - coord;
+        Vector3 lookDir;
+        if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+            lookDir = new Vector3(Mathf.Sign(delta.x), 0, 0);
+        else
+            lookDir = new Vector3(0, 0, Mathf.Sign(delta.y));
+
+        if (lookDir.sqrMagnitude > 0.01f)
+            transform.rotation = Quaternion.LookRotation(lookDir);
     }
 }

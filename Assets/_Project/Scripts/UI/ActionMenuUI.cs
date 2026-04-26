@@ -30,19 +30,21 @@ public class ActionMenuUI : MonoBehaviour
 
     public void Open(Vector3 wpos, Camera cam, Vector2 offset)
     {
-        if (panel == null || canvas == null || cam == null) return;
+        //if (panel == null || canvas == null || cam == null) return;
+        //panel.gameObject.SetActive(true);
+
+        //Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, wpos);
+        //screenPos += offset;
+
+        //RectTransform canvasRect = canvas.transform as RectTransform;
+        //Camera uicam = (canvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : cam;
+
+        //if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, uicam, out Vector2 localPos))
+        //{
+        //    panel.anchoredPosition = localPos;
+        //}
+        if (panel == null) return;
         panel.gameObject.SetActive(true);
-
-        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, wpos);
-        screenPos += offset;
-
-        RectTransform canvasRect = canvas.transform as RectTransform;
-        Camera uicam = (canvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : cam;
-
-        if(RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, uicam, out Vector2 localPos))
-        {
-            panel.anchoredPosition = localPos;
-        }
     }
 
     public void Close()
