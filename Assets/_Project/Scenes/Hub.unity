@@ -4547,6 +4547,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3a625cc18dfff4e4285b260bedfb2fe7, type: 2}
   - {fileID: 11400000, guid: 5ea42b78a1497174687a39d3ebccd738, type: 2}
   - {fileID: 11400000, guid: f1144a93cd0090040b42c7fab605c8c6, type: 2}
+  - {fileID: 11400000, guid: f1144a93cd0090040b42c7fab605c8c6, type: 2}
   eventUI: {fileID: 645542211}
   eventGenerator: {fileID: 1754962524}
   autoOpenOnStart: 1
