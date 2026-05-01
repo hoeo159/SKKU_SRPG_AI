@@ -10,10 +10,13 @@ public class HubDirectorRunner : MonoBehaviour
     //[SerializeField] private bool useLLMEvent = true;
 
     [Header("UI / LLM")]
-    [SerializeField] private HubEventUI eventUI;
-    [SerializeField] private HubEventGenerator eventGenerator;
-    [SerializeField] private bool autoOpenOnStart = true;
-    [SerializeField] private bool forceRegnerateText = false;
+    [SerializeField] private HubEventUI             eventUI;
+    [SerializeField] private HubEventGenerator      eventGenerator;
+    [SerializeField] private bool                   autoOpenOnStart = true;
+    [SerializeField] private bool                   forceRegnerateText = false;
+
+    [SerializeField] private OpenAIResponseClient   openAIClient;
+    [SerializeField] private APIKeyAskUI            apiKeyAskUI;
 
     private void Awake()
     {
@@ -21,11 +24,39 @@ public class HubDirectorRunner : MonoBehaviour
         if (eventGenerator == null) eventGenerator = FindFirstObjectByType<HubEventGenerator>();
     }
 
+    public static bool isFirst = true;
+
     void Start()
     {
         var state = GameManager.gameManager?.state;
         if (state == null) return;
 
+        if(isFirst)
+        {
+            if(openAIClient != null)
+                openAIClient.ClearAndSaveKey();
+            isFirst = false;
+        }
+
+        if (openAIClient != null && !openAIClient.isAPIKey())
+        {
+            Debug.Log("[ApiKeyCheck] No API Key found.");
+            if (apiKeyAskUI != null)
+            {
+                apiKeyAskUI.Show(onSubmit: (key) =>
+                {
+                    openAIClient.SaveAPIKey(key);
+                    Start_Event(state);
+                });
+                return;
+            }
+        }
+
+        Start_Event(state);
+    }
+
+    void Start_Event(GameStateSO state)
+    {
         if (state.lastExpedSnapShot.expedId > 0 &&
             state.lastEventGeneratedExpedId < state.lastExpedSnapShot.expedId)
         {
@@ -77,6 +108,16 @@ public class HubDirectorRunner : MonoBehaviour
             onOK: (r) => { result = r; done = true; },
             onError: (e) => { err = e; done = true; }
         );
+
+        if (err == "INVALID_API_KEY" && apiKeyAskUI != null)
+        {
+            apiKeyAskUI.Show(onSubmit: (newKey) =>
+            {
+                openAIClient.SaveAPIKey(newKey);
+                StartCoroutine(Co_OpenHoldingEvent());
+            });
+            yield break;
+        }
 
         if (result == null)
             result = HubEventGenerator.MakeFallback(err ?? "Unknown error");

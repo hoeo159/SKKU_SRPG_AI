@@ -84,5 +84,5 @@ MonoBehaviour:
   temperature: 0.7
   store: 0
   maxOutputTokens: 400
-  envKeyName: OPENAI_UNITY_KEY
+  envKeyName: 
   fallbackApiKey: 

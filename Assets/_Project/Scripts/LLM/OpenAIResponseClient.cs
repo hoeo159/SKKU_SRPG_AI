@@ -18,6 +18,46 @@ public class OpenAIResponseClient : MonoBehaviour
     [SerializeField] private string     fallbackApiKey = ""; // 데모용 임시 키
 
     private const string URL = "https://api.openai.com/v1/responses";
+    private const string PrefKey = "OPENAI_API_KEY";
+
+#if UNITY_EDITOR
+    [ContextMenu("Clear Saved API Key")]
+    public void DebugClearKey()
+    {
+        ClearAndSaveKey();
+    }
+#endif
+
+    public string GetAPIKey()
+    {
+        string key = PlayerPrefs.GetString(PrefKey, null);
+        if(!string.IsNullOrEmpty(key)) return key;
+
+        if(!string.IsNullOrEmpty(envKeyName))
+        {
+            Debug.Log($"Trying to get API key from env var : {envKeyName}");
+            key = Environment.GetEnvironmentVariable(envKeyName);
+            if(!string.IsNullOrEmpty(key)) return key;
+        }
+
+        Debug.LogWarning($"API key not found. Please set it in PlayerPrefs with key '{PrefKey}' or env var '{envKeyName}'.");
+        return fallbackApiKey;
+    }
+
+    public void ClearAndSaveKey()
+    {
+        PlayerPrefs.DeleteKey(PrefKey);
+        PlayerPrefs.Save();
+    }
+
+    public bool isAPIKey() => !string.IsNullOrEmpty(GetAPIKey());
+
+    public void SaveAPIKey(string key)
+    {
+        if(string.IsNullOrEmpty(key)) return;
+        PlayerPrefs.SetString(PrefKey, key);
+        PlayerPrefs.Save();
+    }
 
     [Serializable] class ResponseRequest
     {
@@ -70,9 +110,8 @@ public class OpenAIResponseClient : MonoBehaviour
         Action<string> onJsonText,
         Action<string> onError)
     {
-        string apiKey = Environment.GetEnvironmentVariable(envKeyName);
-        if (string.IsNullOrEmpty(apiKey))
-            apiKey = fallbackApiKey;
+        string apiKey = GetAPIKey();
+
         if (string.IsNullOrEmpty(apiKey))
         {
             onError?.Invoke($"API key env var : {envKeyName}");
@@ -108,6 +147,15 @@ public class OpenAIResponseClient : MonoBehaviour
 
         if(www.result != UnityWebRequest.Result.Success)
         {
+            if (www.responseCode == 401 || www.responseCode == 403)
+            {
+                Debug.LogWarning("[OpenAI] Auth failed. Clearing saved key.");
+                ClearAndSaveKey();
+                onError?.Invoke("INVALID_API_KEY");
+                yield break;
+            }
+
+
             onError?.Invoke($"OpenAI error : {www.error}");
             Debug.LogWarning($"[OpenAI] HTTP {www.responseCode} err={www.error}\n" +
                  $"Retry-After={www.GetResponseHeader("Retry-After")}\n" +
@@ -126,6 +174,37 @@ public class OpenAIResponseClient : MonoBehaviour
         }
 
         onJsonText?.Invoke(outputText);
+    }
+
+    public IEnumerator ValidateApiKey(string apiKey, Action<bool, string> onResult)
+    {
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            onResult?.Invoke(false, "API 키가 비어있습니다.");
+            yield break;
+        }
+
+        using var www = UnityWebRequest.Get("https://api.openai.com/v1/models");
+        www.SetRequestHeader("Authorization", "Bearer " + apiKey);
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            onResult?.Invoke(true, null);
+        }
+        else
+        {
+            string msg = www.responseCode switch
+            {
+                401 => "유효하지 않은 API 키입니다.",
+                403 => "접근 권한이 없는 키입니다.",
+                429 => "API 사용량 한도를 초과했거나 결제 문제가 있습니다.",
+                0 => "네트워크 연결에 실패했습니다.",
+                _ => $"검증 실패 (HTTP {www.responseCode})"
+            };
+            onResult?.Invoke(false, msg);
+        }
     }
 
     private string ExtractOutputToText(Response resp)
